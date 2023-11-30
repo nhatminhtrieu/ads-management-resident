@@ -48,6 +48,6 @@ const AdvertisementSchema = new Schema({
     }
 });
 
-const Advertisement = model('Advertisement', AdvertisementSchema);
+const Advertisement = model('Advertisement', AdvertisementSchema, 'advertisements');
 
 export default Advertisement;
