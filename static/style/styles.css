@@ -1,0 +1,32 @@
+.otpBtn {
+    background-color: #fff;
+    color: rgb(25, 25, 25);
+    border-radius: 16px;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+
+.form-check .form-check-input {
+    width: 50px;
+    height: 25px;
+}
+
+.form-check .form-check-label{
+    font-size: medium;
+}
+
+.container-toggle{
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 16px;
+    width: 90vw;
+    margin-bottom: 8px;
+}
+
+#visibleAds {
+    padding-left: 0;
+}
+
+#Ads {
+    margin-left: 8px;
+}
