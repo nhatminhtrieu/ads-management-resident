@@ -1,9 +1,11 @@
 import { connect } from 'mongoose';
-import { CONNTECTION_STRING } from '../config';
+import { config } from 'dotenv';
 
+config();
 export default async () => {
+    const CONNECTION_STRING = process.env.CONNECTION_STRING;
     try {
-        await connect(CONNTECTION_STRING);
+        await connect(CONNECTION_STRING);
         console.log('Database connected');
     } catch (err) {
         console.log('Database connection failed', err);

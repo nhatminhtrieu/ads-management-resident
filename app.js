@@ -1,4 +1,5 @@
 import express from 'express';
+import Connection from './schema/database/Connection.js';
 
 const app = express()
 const port = 3456
@@ -12,3 +13,5 @@ app.use('/static', express.static('static'))
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+Connection();
