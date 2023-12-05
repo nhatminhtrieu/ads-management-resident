@@ -16,7 +16,7 @@ const AdvertisementSchema = new Schema({
     },
     typeLoc: {
         type: String,
-        enum: ['Type1', 'Type2', 'Type3'],
+        enum: ['PublicLand', 'Park', 'TrafficSafetyCorridor', 'PrivateLand', 'IndividualHouse', 'CommercialCenter', 'Market', 'GasStation', 'BusStation'],
         required: true
     },
     typeAds: {
