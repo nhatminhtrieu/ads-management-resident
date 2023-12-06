@@ -72,4 +72,15 @@ export class Service {
     );
     infoWindow.open(map);
   }
+
+    preloadCaptcha() {
+        // Use <div id="captcha"></div> to render captcha
+        turnstile.render('#captcha', {
+            sitekey: '0x4AAAAAAAOLF5GT_0tyAUJJ',
+            theme: 'auto',
+            callback: (token) => {
+                console.log('Captcha solved')
+            }
+        });
+    }
 }
