@@ -1,35 +1,20 @@
 import initCurrentLocation from "./currentLocation.js";
-
+import loadMarker from "./loadMarker.js";
 import moveToCurrenLocation from "../service/moveToCurrentLocation.js";
-<<<<<<< Updated upstream
-import toggleContainer  from "../service/Toggle.js";
-=======
 import toggleContainer from "../service/Toggle.js";
->>>>>>> Stashed changes
+import loadBanners from "../service/bannerInfo.js";
 
 function handleStatus(status) {
   //[switchAds, switchReports]
   //call again function to hide or show ads and reports
 }
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 async function initMap() {
   const map = await initCurrentLocation();
   moveToCurrenLocation(map);
+  loadMarker(map);
+  loadBanners();
 
-<<<<<<< Updated upstream
-  let status = [false, false]
-  toggleContainer(map, (switchAds, switchReports) => {
-    status = [switchAds, switchReports]
-    handleStatus(status)
-  });
-}
-
-initMap();
-=======
   let status = [false, false];
   toggleContainer(map, (switchAds, switchReports) => {
     status = [switchAds, switchReports];
@@ -38,4 +23,3 @@ initMap();
 }
 
 initMap();
->>>>>>> Stashed changes
