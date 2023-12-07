@@ -59,6 +59,16 @@
   gap: 1rem;
 }
 
+.card-list ul {
+  padding: 0px;
+  list-style: none;
+}
+
+.card-list em {
+  font-style: normal;
+  font-weight: bold;
+}
+
 #visibleAds {
   padding-left: 0;
 }
