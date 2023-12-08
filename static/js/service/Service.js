@@ -4,7 +4,7 @@ export class Service {
     this.infoWindow = new google.maps.InfoWindow();
   }
 
-  moveToCurrenLocation() {
+  moveToCurrentLocation() {
     const locationButton = document.createElement("button");
     locationButton.innerHTML = '<i class="bi bi-geo-alt"></i> Vị trí hiện tại';
 
@@ -17,7 +17,7 @@ export class Service {
     locationButton.addEventListener("click", async () => {
       try {
         const pos = await this.map.getCurrentLocation();
-        this.map.mark(pos, "Bạn đang ở đây");
+        this.map.pushMarker(pos, "Bạn đang ở đây");
         this.map.map.setCenter(pos);
         this.map.map.setZoom(19);
       } catch (error) {
