@@ -37,13 +37,14 @@ function createCard(cardInfo) {
 
 export function removeBanners() {
   let description = document.getElementById("description");
+  description.style.display = "none";
   const cardList = description.getElementById("card-list");
   description.removeChild(cardList);
 }
 
 export default function setBanners() {
   let description = document.getElementById("description");
-
+  description.style.display = "block";
   let cardList = document.createElement("div");
   cardList.classList.add("card-list");
   cardList.id = "card-list";

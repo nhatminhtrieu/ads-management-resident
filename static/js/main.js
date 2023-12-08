@@ -11,7 +11,7 @@ async function main() {
   service.showAllMarker();
   loadMarker(map);
   map.map.addListener("click", (event) => {
-    map.pushMarker(event.latLng, "Vị trí bạn chọn", { defaultStyle: false });
+    map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
   });
 }
 

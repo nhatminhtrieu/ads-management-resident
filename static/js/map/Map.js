@@ -1,4 +1,4 @@
-import setBanners from "../service/handleBannerCard.js";
+import setBanners, { removeBanners } from "../service/handleBannerCard.js";
 export class IMap {
   constructor() {
     this.map = null;
@@ -8,12 +8,13 @@ export class IMap {
       default: {
         background: "#FBBC04",
         glyphColor: "#ff8300",
+        scale: 1.5,
       },
       ad: {
         background: "#6600ff",
         glyph: "QC",
         glyphColor: "#ffffff",
-        borderColor: "#c299ff",
+        borderColor: "#6600ff",
       },
     };
   }
@@ -46,16 +47,15 @@ export class IMap {
     return pos;
   }
 
-  async pushMarker(position, title, defaultStyle = true, content = title) {
+  async pushMarker(position, title, defaultStyle = "", content = title) {
     const { AdvancedMarkerElement, PinElement } =
       await google.maps.importLibrary("marker");
-    console.log(defaultStyle);
-    const pin = new PinElement(this.pinCustom["ad"]);
+    const pin = new PinElement(this.pinCustom[defaultStyle]);
     const marker = new AdvancedMarkerElement({
       position: position,
       map: this.map,
       title,
-      content: defaultStyle === true ? null : pin.element,
+      content: defaultStyle === "" ? null : pin.element,
     });
 
     const infoWindow = new google.maps.InfoWindow({
@@ -67,11 +67,13 @@ export class IMap {
         anchor: marker,
         map: this.map,
       });
+    });
+
+    marker.addListener("click", () => {
       setBanners();
     });
 
     this.marker.push(marker);
-    infoWindow.open(this.map, marker);
   }
 
   setMapOnAll(map) {
