@@ -29,8 +29,12 @@ const AdvertisementSchema = new Schema({
         enum: ['HiflexPanelPosts', 'LEDElectronicDisplayPosts', 'LightboxPillar', 'WallCladdingHiflexBoard', 'WallCladdingElectronicDisplay', 'VerticalBannerHangingPosts', 'HorizontalBannerHangingPosts', 'PillarsPanelAssemblies', 'GreetingPort', 'ShoppingMalls'],
         required: true
     },
-    zoning: {
+    zoning: {           // Quy hoạch
         type: Boolean,
+        required: true
+    },
+    numberOfBoard: {
+        type: String,
         required: true
     },
     size: {
