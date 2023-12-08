@@ -21,14 +21,14 @@ export class IMap {
 
   async initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const currenLocation = await this.getCurrentLocation();
+    const currentLocation = await this.getCurrentLocation();
     this.map = new Map(document.getElementById("map"), {
-      center: currenLocation,
+      center: currentLocation,
       zoom: 19,
       mapId: "adf136d39bc00bf9",
     });
 
-    this.pushMarker(currenLocation, "Bạn đang ở đây");
+    this.pushMarker(currentLocation, "Bạn đang ở đây");
     return this.map;
   }
 
