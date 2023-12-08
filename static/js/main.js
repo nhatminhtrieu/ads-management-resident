@@ -13,6 +13,7 @@ async function main() {
   // map.map.addListener("click", (event) => {
   //   map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
   // });
+  // service.preloadCaptcha();
 }
 
 main();
