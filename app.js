@@ -1,5 +1,5 @@
 import express from 'express';
-import Connection from './schema/database/Connection.js';
+import Connection from './database/Connection.js';
 
 const app = express()
 const port = 3456
