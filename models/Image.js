@@ -1,5 +1,5 @@
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ImageSchema = new mongoose.Schema({
     url: {
@@ -20,4 +20,4 @@ const ImageSchema = new mongoose.Schema({
 
 const Image = mongoose.model('Image', ImageSchema, 'images');
 
-module.exports = Image;
+export default Image;
