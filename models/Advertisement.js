@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import Image from './Image';
+import Image from './Image.js';
 
 const AdvertisementSchema = new Schema({
     id: {
@@ -15,7 +15,7 @@ const AdvertisementSchema = new Schema({
         required: true
     },
     typeLoc: {
-        type: String,
+        type: [String],
         enum: ['PublicLand', 'Park', 'TrafficSafetyCorridor', 'PrivateLand', 'IndividualHouse', 'CommercialCenter', 'Market', 'GasStation', 'BusStation'],
         required: true
     },
@@ -29,14 +29,19 @@ const AdvertisementSchema = new Schema({
         enum: ['HiflexPanelPosts', 'LEDElectronicDisplayPosts', 'LightboxPillar', 'WallCladdingHiflexBoard', 'WallCladdingElectronicDisplay', 'VerticalBannerHangingPosts', 'HorizontalBannerHangingPosts', 'PillarsPanelAssemblies', 'GreetingPort', 'ShoppingMalls'],
         required: true
     },
+    zoning: {
+        type: Boolean,
+        required: true
+    },
     size: {
         type: String,
         required: true
     },
-    imgs: {
-        type: [Image],
+    imgs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Image',
         required: true
-    },
+    }],
     exp: {
         type: Date,
         required: true

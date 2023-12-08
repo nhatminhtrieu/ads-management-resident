@@ -1,0 +1,8 @@
+const AdvertisementModel = require('../models/Advertisement');
+
+class AdvertisementRepository {
+    async createAdvertisement(advertisement) {
+        const newAdvertisement = new AdvertisementModel(advertisement);
+        return await newAdvertisement.save();
+    }
+}
