@@ -5,11 +5,6 @@ class AdvertisementRepository {
     const newAdvertisement = new AdvertisementModel(advertisement);
     return await newAdvertisement.save();
   }
-  async createAdvertisement(advertisement) {
-    const newAdvertisement = new AdvertisementModel(advertisement);
-    return await newAdvertisement.save();
-  }
-
   async getAdvertisements() {
     return await AdvertisementModel.find();
   }
