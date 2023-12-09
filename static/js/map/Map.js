@@ -3,6 +3,8 @@ export class IMap {
   constructor() {
     this.map = null;
     this.marker = [];
+    this.currentLocation = null;
+    this.currentMarker = null;
     this.infoWindow = [];
     this.pinCustom = {
       default: {
@@ -21,14 +23,14 @@ export class IMap {
 
   async initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const currentLocation = await this.getCurrentLocation();
+    this.currentLocation = await this.getCurrentLocation();
     this.map = new Map(document.getElementById("map"), {
-      center: currentLocation,
+      center: this.currentLocation,
       zoom: 19,
       mapId: "adf136d39bc00bf9",
     });
 
-    this.pushMarker(currentLocation, "Bạn đang ở đây");
+    this.pushMarker(this.currentLocation, "Bạn đang ở đây");
     return this.map;
   }
 
@@ -73,7 +75,10 @@ export class IMap {
       setBanners();
     });
 
-    this.marker.push(marker);
+    if (position.lat != this.currentLocation.lat && position.lng != this.currentLocation.lng) // if marker is not current location
+      this.marker.push(marker); // push marker to array
+    else
+      this.currentMarker = marker; // else set current marker
   }
 
   setMapOnAll(map) {
