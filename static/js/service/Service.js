@@ -21,7 +21,7 @@ export class Service {
           this.map.currentMarker.setMap(null);
           this.map.currentLocation = pos;
         }
-        this.map.pushMarker(pos, "Bạn đang ở đây");
+        this.map.pushMarker(pos, "Bạn đang ở đây", "current");
         this.map.map.setCenter(pos);
         this.map.map.setZoom(19);
       } catch (error) {

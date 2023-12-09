@@ -18,6 +18,14 @@ export class IMap {
         glyphColor: "#ffffff",
         borderColor: "#6600ff",
       },
+      current: {
+        glyph: (() => {
+          const glyImg = document.createElement("img");
+          glyImg.src = '../../static/assets/CurrentIcon.svg';
+          return glyImg;
+        })(),
+        scale: 0
+      }
     };
   }
 
@@ -30,7 +38,7 @@ export class IMap {
       mapId: "adf136d39bc00bf9",
     });
 
-    this.pushMarker(this.currentLocation, "Bạn đang ở đây");
+    this.pushMarker(this.currentLocation, "Bạn đang ở đây", "current");
     return this.map;
   }
 
@@ -50,8 +58,7 @@ export class IMap {
   }
 
   async pushMarker(position, title, defaultStyle = "", content = title) {
-    const { AdvancedMarkerElement, PinElement } =
-      await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
     const pin = new PinElement(this.pinCustom[defaultStyle]);
     const marker = new AdvancedMarkerElement({
       position: position,
@@ -75,10 +82,7 @@ export class IMap {
       setBanners();
     });
 
-    if (position.lat != this.currentLocation.lat && position.lng != this.currentLocation.lng) // if marker is not current location
-      this.marker.push(marker); // push marker to array
-    else
-      this.currentMarker = marker; // else set current marker
+    position === this.currentLocation ? this.currentMarker = marker : this.marker.push(marker);
   }
 
   setMapOnAll(map) {
