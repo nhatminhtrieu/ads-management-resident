@@ -99,17 +99,17 @@ export class IMap {
     this.marker.forEach((marker) => marker.setMap(map));
   }
 
-    async convertCoordinate2Address(latlng) {
-        const geocoder = new google.maps.Geocoder();
-        return new Promise((resolve, reject) => {
-            geocoder.geocode({ location: latlng })
-                .then((response) => {
-                    if (response.results[0]) 
-                        resolve(response.results[0].formatted_address);
-                    else 
-                        reject("No results found");
-                })
-                .catch((e) => reject("Geocoder failed due to: " + e));
-        });
-    }
+  async convertCoordinate2Address(latlng) {
+    const geocoder = new google.maps.Geocoder();
+    return new Promise((resolve, reject) => {
+      geocoder.geocode({ location: latlng })
+        .then((response) => {
+          if (response.results[0])
+            resolve(response.results[0].formatted_address);
+          else
+            reject("No results found");
+        })
+        .catch((e) => reject("Geocoder failed due to: " + e));
+    });
+  }
 }
