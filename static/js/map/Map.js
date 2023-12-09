@@ -52,7 +52,16 @@ export class IMap {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
-      }, reject);
+      }, () => { // if user denied permission, current location is at HCMUS
+        resolve({
+          lat: 10.762838024314062,
+          lng: 106.68248463223016,
+        })
+      }, { // this options means that getCurrentPosition will wait for 5s before timeout
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
     });
     return pos;
   }
@@ -82,7 +91,8 @@ export class IMap {
       setBanners();
     });
 
-    position === this.currentLocation ? this.currentMarker = marker : this.marker.push(marker);
+    //not add marker of current location to marker array
+    JSON.stringify(position) === JSON.stringify(this.currentLocation) ? this.currentMarker = marker : this.marker.push(marker);
   }
 
   setMapOnAll(map) {

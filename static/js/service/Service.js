@@ -17,7 +17,8 @@ export class Service {
     locationButton.addEventListener("click", async () => {
       try {
         const pos = await this.map.getCurrentLocation();
-        if (this.map.currentLocation.lat != pos.lat && this.map.currentLocation.lng != pos.lng) {
+        // update new current location if user move
+        if (JSON.stringify(this.map.currentLocation) !== JSON.stringify(pos)) {
           this.map.currentMarker.setMap(null);
           this.map.currentLocation = pos;
         }
