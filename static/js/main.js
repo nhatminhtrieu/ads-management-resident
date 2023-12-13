@@ -9,11 +9,10 @@ async function main() {
 
   service.moveToCurrentLocation();
   // service.showAllMarker();
-  // loadMarker(map);
+  loadMarker(map);
   // map.map.addListener("click", (event) => {
   //   map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
   // });
-  // service.preloadCaptcha();
 }
 
 main();
