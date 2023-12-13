@@ -1,6 +1,6 @@
 
 import { Schema, model } from 'mongoose';
-import Image from './Image';
+import Image from 'models/Image';
 
 const ReportSchema = new Schema({
     id: {

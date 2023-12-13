@@ -7,12 +7,12 @@ async function main() {
 
   const service = new Service(map);
 
-  service.moveToCurrenLocation();
-  service.showAllMarker();
+  service.moveToCurrentLocation();
+  // service.showAllMarker();
   loadMarker(map);
-  map.map.addListener("click", (event) => {
-    map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
-  });
+  // map.map.addListener("click", (event) => {
+  //   map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
+  // });
 }
 
 main();

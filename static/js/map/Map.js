@@ -21,14 +21,14 @@ export class IMap {
 
   async initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const currenLocation = await this.getCurrentLocation();
+    const currentLocation = await this.getCurrentLocation();
     this.map = new Map(document.getElementById("map"), {
-      center: currenLocation,
+      center: currentLocation,
       zoom: 19,
       mapId: "adf136d39bc00bf9",
     });
 
-    this.pushMarker(currenLocation, "Bạn đang ở đây");
+    this.pushMarker(currentLocation, "Bạn đang ở đây");
     return this.map;
   }
 
@@ -79,4 +79,18 @@ export class IMap {
   setMapOnAll(map) {
     this.marker.forEach((marker) => marker.setMap(map));
   }
+
+    async convertCoordinate2Address(latlng) {
+        const geocoder = new google.maps.Geocoder();
+        return new Promise((resolve, reject) => {
+            geocoder.geocode({ location: latlng })
+                .then((response) => {
+                    if (response.results[0]) 
+                        resolve(response.results[0].formatted_address);
+                    else 
+                        reject("No results found");
+                })
+                .catch((e) => reject("Geocoder failed due to: " + e));
+        });
+    }
 }
