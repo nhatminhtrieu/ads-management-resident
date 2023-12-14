@@ -5,6 +5,7 @@ export class IMap {
     this.marker = [];
     this.currentLocation = null;
     this.currentMarker = null;
+    this.userSelectedLocation = null;
     this.infoWindow = [];
     this.pinCustom = {
       default: {
@@ -25,6 +26,11 @@ export class IMap {
           return glyImg;
         })(),
         scale: 0
+      },
+      userSelected: {
+        background: "#ff0000",
+        glyphColor: "#ffffff",
+        scale: 1.5,
       }
     };
   }
@@ -93,6 +99,16 @@ export class IMap {
 
     //not add marker of current location to marker array
     JSON.stringify(position) === JSON.stringify(this.currentLocation) ? this.currentMarker = marker : this.marker.push(marker);
+
+    // Allow only one userSelectedMarker
+    if (defaultStyle === "userSelected") {
+      // Clear old marker if exist
+      if (this.userSelectedMarker)
+        this.userSelectedMarker.setMap(null);
+
+      // Set new marker
+      this.userSelectedMarker = marker;
+    }
   }
 
   setMapOnAll(map) {
