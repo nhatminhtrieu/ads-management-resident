@@ -3,6 +3,8 @@ export class IMap {
   constructor() {
     this.map = null;
     this.marker = [];
+    this.currentLocation = null;
+    this.currentMarker = null;
     this.infoWindow = [];
     this.pinCustom = {
       default: {
@@ -16,19 +18,27 @@ export class IMap {
         glyphColor: "#ffffff",
         borderColor: "#6600ff",
       },
+      current: {
+        glyph: (() => {
+          const glyImg = document.createElement("img");
+          glyImg.src = '../../static/assets/CurrentIcon.svg';
+          return glyImg;
+        })(),
+        scale: 0
+      }
     };
   }
 
   async initMap() {
     const { Map } = await google.maps.importLibrary("maps");
-    const currentLocation = await this.getCurrentLocation();
+    this.currentLocation = await this.getCurrentLocation();
     this.map = new Map(document.getElementById("map"), {
-      center: currentLocation,
+      center: this.currentLocation,
       zoom: 19,
       mapId: "adf136d39bc00bf9",
     });
 
-    this.pushMarker(currentLocation, "Bạn đang ở đây");
+    this.pushMarker(this.currentLocation, "Bạn đang ở đây", "current");
     return this.map;
   }
 
@@ -42,14 +52,22 @@ export class IMap {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
-      }, reject);
+      }, () => { // if user denied permission, current location is at HCMUS
+        resolve({
+          lat: 10.762838024314062,
+          lng: 106.68248463223016,
+        })
+      }, { // this options means that getCurrentPosition will wait for 5s before timeout
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
     });
     return pos;
   }
 
   async pushMarker(position, title, defaultStyle = "", content = title) {
-    const { AdvancedMarkerElement, PinElement } =
-      await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
     const pin = new PinElement(this.pinCustom[defaultStyle]);
     const marker = new AdvancedMarkerElement({
       position: position,
@@ -73,7 +91,8 @@ export class IMap {
       setBanners();
     });
 
-    this.marker.push(marker);
+    //not add marker of current location to marker array
+    JSON.stringify(position) === JSON.stringify(this.currentLocation) ? this.currentMarker = marker : this.marker.push(marker);
   }
 
   setMapOnAll(map) {
