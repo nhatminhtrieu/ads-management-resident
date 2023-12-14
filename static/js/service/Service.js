@@ -92,7 +92,10 @@ export class Service {
   catchUserSelectedLocation() {
     this.map.map.addListener("click", async (event) => {
       // This modified func will allow to show only one userSelectedMarker
-      this.map.pushMarker(event.latLng, "Vị trí bạn chọn", "userSelected", await this.map.convertCoordinate2Address(event.latLng));
+      this.map.pushMarker(event.latLng, "Vị trí bạn chọn", "userSelected");
+
+      // Update banner
+      this.map.banners.setBannersForUserSelection(await this.map.getNameAndAddressFromCoordinate(event.latLng));
     });
   }
 }

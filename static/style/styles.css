@@ -110,3 +110,15 @@
   border-radius: 0 0.375rem 0.375rem 0;
   box-shadow: 5px 2px 7px 1px rgba(0, 0, 0, 0.3);
 }
+
+.non-ads-card{
+  background-color: #e5f6fd;
+  border: none;
+  color: #014361;
+}
+
+.user-selection-card{
+  background-color: #edf7ed;
+  border: none;
+  color: #224924;
+}
