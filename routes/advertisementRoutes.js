@@ -1,20 +1,22 @@
-// const express = require("express");
-// const router = express.Router();
-// const AdvertisementService = require("../repositories/AdvertisementRepository");
-
-// // Define your routes here
+// Define your routes here
 import express from "express";
 const router = express.Router();
 import AdvertisementService from "../services/AdvertisementService.js";
 
-router.get("/", async (req, res) => {
+router.get("/locations", async (req, res) => {
   const service = new AdvertisementService();
-  const list = await service.getAllLocations();
-  res.send(list);
+  const locations = await service.getAllLocations();
+  res.send(locations);
 });
 
-router.get("/locations", (req, res) => {
-  res.send("This is location");
+router.get("/", async (req, res) => {
+  const service = new AdvertisementService();
+  const coordinate = {
+    lat: req.query.lat,
+    lng: req.query.lng,
+  };
+  const list = await service.getAdvertisementsByLocation(coordinate);
+  res.send(list);
 });
 
 export default router;

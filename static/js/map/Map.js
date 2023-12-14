@@ -1,4 +1,4 @@
-import setBanners, { removeBanners } from "../service/handleBannerCard.js";
+import setBanners from "../service/handleBannerCard.js";
 export class IMap {
   constructor() {
     this.map = null;
@@ -70,7 +70,7 @@ export class IMap {
     });
 
     marker.addListener("click", () => {
-      setBanners();
+      setBanners(position);
     });
 
     this.marker.push(marker);
@@ -80,17 +80,17 @@ export class IMap {
     this.marker.forEach((marker) => marker.setMap(map));
   }
 
-    async convertCoordinate2Address(latlng) {
-        const geocoder = new google.maps.Geocoder();
-        return new Promise((resolve, reject) => {
-            geocoder.geocode({ location: latlng })
-                .then((response) => {
-                    if (response.results[0]) 
-                        resolve(response.results[0].formatted_address);
-                    else 
-                        reject("No results found");
-                })
-                .catch((e) => reject("Geocoder failed due to: " + e));
-        });
-    }
+  async convertCoordinate2Address(latlng) {
+    const geocoder = new google.maps.Geocoder();
+    return new Promise((resolve, reject) => {
+      geocoder
+        .geocode({ location: latlng })
+        .then((response) => {
+          if (response.results[0])
+            resolve(response.results[0].formatted_address);
+          else reject("No results found");
+        })
+        .catch((e) => reject("Geocoder failed due to: " + e));
+    });
+  }
 }
