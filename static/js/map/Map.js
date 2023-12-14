@@ -132,10 +132,7 @@ export class IMap {
       this.banners.setBannersForAds(position);
     });
 
-    //not add marker of current location to marker array
-    JSON.stringify(position) === JSON.stringify(this.currentLocation)
-      ? (this.currentMarker = marker)
-      : this.marker.push(marker);
+
 
     // Allow only one userSelectedMarker
     if (defaultStyle === "userSelected") {
@@ -144,6 +141,11 @@ export class IMap {
 
       // Set new marker
       this.userSelectedMarker = marker;
+    } else {
+      // Not add marker of current location and userSelectedMarker to marker array
+      JSON.stringify(position) === JSON.stringify(this.currentLocation)
+        ? (this.currentMarker = marker)
+        : this.marker.push(marker);
     }
   }
 
@@ -169,7 +171,7 @@ export class IMap {
     const rawAddress = await this.convertCoordinate2Address(latlng);
     const numberOfPart = rawAddress.split(",").length;
 
-    if (numberOfPart >= 6){
+    if (numberOfPart >= 6) {
       const name = rawAddress.split(",")[0];
       const address = rawAddress.split(",").slice(1).join(",");
       return { name, address };
