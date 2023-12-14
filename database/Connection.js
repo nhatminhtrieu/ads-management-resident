@@ -27,21 +27,28 @@ image1.save()
         // Create new Advertisement document using the id of the saved Image
         const sampleAdvertisement = new Advertisement({
             id: new mongoose.Types.ObjectId(),
-            address: {/* address object */ },
-            coordinate: {/* coordinate object */ },
-            typeLoc: ['PublicLand'],
+            address: {
+                address_components: [{}],
+                formatted_text: '123 Main St, Anytown, USA'
+            },
+            coordinate: {},
+            typeLoc: 'PublicLand',
             typeAds: 'PoliticalPromotion',
             typeBoard: 'HiflexPanelPosts',
+            number: '123',
             zoning: true,
             size: '10x10',
-            imgs: [savedImage._id], // Use the id of the saved Image
+            imgs: [savedImage._id],
             exp: new Date(),
             status: 'draft'
         });
 
         sampleAdvertisement.save()
-            .then(() => console.log('Sample advertisement added to the database'))
-            .catch(err => console.error(err));
+            .then((savedAdvertisement) => {
+                console.log('Advertisement saved successfully');
+            })
+            .catch((error) => {
+                console.error('Error saving Advertisement:', error);
+            });
     })
     .catch(err => console.error(err));
-

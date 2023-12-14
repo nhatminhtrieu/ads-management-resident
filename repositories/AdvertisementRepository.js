@@ -13,7 +13,6 @@ class AdvertisementRepository {
   async getAdvertisements() {
     return await AdvertisementModel.find();
   }
-
-
-
 }
+
+export default new AdvertisementRepository();
