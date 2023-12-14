@@ -1,5 +1,3 @@
-import advertisement from "../mocks/advertisement.js";
-
 function createCard(cardInfo) {
   const card = document.createElement("div");
   card.classList.add("card", "card-body");
@@ -9,7 +7,14 @@ function createCard(cardInfo) {
 
   const address = document.createElement("p");
   address.classList.add("card-text");
-  address.innerText = cardInfo.address;
+  address.innerText = cardInfo.address["formatted_text"];
+
+  const list = document.createElement("ul");
+  list.innerHTML = `<li>Kích thước: <em>${cardInfo.size}</em></li>\
+    <li>Số lượng: <em>${cardInfo.number}</em></li>\
+    <li>Hình thức: <em>${cardInfo.typeAds}</em></li>\
+    <li>Phân loại: <em>${cardInfo.typeLoc}</em</li>\
+  `;
 
   const row = document.createElement("div");
   row.classList.add("btn-row");
@@ -22,12 +27,6 @@ function createCard(cardInfo) {
       </button>\
   ';
 
-  const list = document.createElement("ul");
-  list.innerHTML = `<li>Kích thước: <em>${cardInfo.size}</em></li>\
-    <li>Số lượng: <em>${0}</em></li>\
-    <li>Hình thức: <em>${cardInfo.typeAds}</em></li>\
-    <li>Phân loại: <em>${cardInfo.typeLoc}</em</li>\
-  `;
   card.appendChild(title);
   card.appendChild(address);
   card.append(list);
@@ -35,23 +34,36 @@ function createCard(cardInfo) {
   return card;
 }
 
-export function removeBanners() {
-  let description = document.getElementById("description");
-  description.style.display = "none";
-  const cardList = description.getElementById("card-list");
-  description.removeChild(cardList);
+export function hideSidebar() {
+  let description = document.getElementById("side-bar");
+  description.style.width = "0px";
 }
 
-export default function setBanners() {
+export function showSidebar() {
+  let description = document.getElementById("side-bar");
+  description.style.width = "408px";
+}
+
+export default function setBanners(coordinate) {
   let description = document.getElementById("description");
   description.style.display = "block";
   let cardList = document.createElement("div");
   cardList.classList.add("card-list");
   cardList.id = "card-list";
-
-  const card = createCard(advertisement);
-  cardList.appendChild(card);
-
-  description.innerHTML = "";
-  description.appendChild(cardList);
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = () => {
+    const ads = JSON.parse(xhttp.responseText);
+    ads.forEach((ad) => {
+      const card = createCard(ad);
+      cardList.appendChild(card);
+      description.innerHTML = "";
+      description.appendChild(cardList);
+    });
+  };
+  xhttp.open(
+    "GET",
+    `http://localhost:3456/advertisement?lat=${coordinate.lat}&lng=${coordinate.lng}`,
+    true
+  );
+  xhttp.send();
 }

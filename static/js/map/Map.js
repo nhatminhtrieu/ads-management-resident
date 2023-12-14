@@ -1,4 +1,4 @@
-import setBanners, { removeBanners } from "../service/handleBannerCard.js";
+import setBanners from "../service/handleBannerCard.js";
 export class IMap {
   constructor() {
     this.map = null;
@@ -22,16 +22,16 @@ export class IMap {
       current: {
         glyph: (() => {
           const glyImg = document.createElement("img");
-          glyImg.src = '../../static/assets/CurrentIcon.svg';
+          glyImg.src = "../../static/assets/CurrentIcon.svg";
           return glyImg;
         })(),
-        scale: 0
+        scale: 0,
       },
       userSelected: {
         background: "#ff0000",
         glyphColor: "#ffffff",
         scale: 1.5,
-      }
+      },
     };
   }
 
@@ -68,8 +68,8 @@ export class IMap {
       mapTypeControl: false,
     });
 
-    this.map.mapTypes.set('map', styledMapType);
-    this.map.setMapTypeId('map');
+    this.map.mapTypes.set("map", styledMapType);
+    this.map.setMapTypeId("map");
 
     this.pushMarker(this.currentLocation, "Bạn đang ở đây", "current");
     return this.map;
@@ -80,27 +80,34 @@ export class IMap {
       if (!navigator.geolocation)
         reject("Geolocation is not supported by your browser");
 
-      navigator.geolocation.getCurrentPosition((position) => {
-        resolve({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      }, () => { // if user denied permission, current location is at HCMUS
-        resolve({
-          lat: 10.762838024314062,
-          lng: 106.68248463223016,
-        })
-      }, { // this options means that getCurrentPosition will wait for 5s before timeout
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        () => {
+          // if user denied permission, current location is at HCMUS
+          resolve({
+            lat: 10.762838024314062,
+            lng: 106.68248463223016,
+          });
+        },
+        {
+          // this options means that getCurrentPosition will wait for 5s before timeout
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
     });
     return pos;
   }
 
   async pushMarker(position, title, defaultStyle = "", content = title) {
-    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement, PinElement } =
+      await google.maps.importLibrary("marker");
     const pin = new PinElement(this.pinCustom[defaultStyle]);
     const marker = new AdvancedMarkerElement({
       position: position,
@@ -121,17 +128,18 @@ export class IMap {
     });
 
     marker.addListener("click", () => {
-      setBanners();
+      setBanners(position);
     });
 
     //not add marker of current location to marker array
-    JSON.stringify(position) === JSON.stringify(this.currentLocation) ? this.currentMarker = marker : this.marker.push(marker);
+    JSON.stringify(position) === JSON.stringify(this.currentLocation)
+      ? (this.currentMarker = marker)
+      : this.marker.push(marker);
 
     // Allow only one userSelectedMarker
     if (defaultStyle === "userSelected") {
       // Clear old marker if exist
-      if (this.userSelectedMarker)
-        this.userSelectedMarker.setMap(null);
+      if (this.userSelectedMarker) this.userSelectedMarker.setMap(null);
 
       // Set new marker
       this.userSelectedMarker = marker;
@@ -145,12 +153,12 @@ export class IMap {
   async convertCoordinate2Address(latlng) {
     const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject) => {
-      geocoder.geocode({ location: latlng })
+      geocoder
+        .geocode({ location: latlng })
         .then((response) => {
           if (response.results[0])
             resolve(response.results[0].formatted_address);
-          else
-            reject("No results found");
+          else reject("No results found");
         })
         .catch((e) => reject("Geocoder failed due to: " + e));
     });

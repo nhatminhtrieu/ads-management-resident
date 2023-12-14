@@ -26,4 +26,14 @@ export default class AdvertisementService {
       console.log("AdvertisementService.getAllLocations", err);
     }
   }
+
+  async getAdvertisementsByLocation(coordinate) {
+    try {
+      const advertisements =
+        await this.repository.getAdvertisementsByCoordinate(coordinate);
+      return advertisements;
+    } catch (err) {
+      console.log("AdvertisementService.getAllAdvertisement", err);
+    }
+  }
 }
