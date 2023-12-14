@@ -38,11 +38,38 @@ export class IMap {
   async initMap() {
     const { Map } = await google.maps.importLibrary("maps");
     this.currentLocation = await this.getCurrentLocation();
-    this.map = new Map(document.getElementById("map"), {
+
+    const styledMapType = new google.maps.StyledMapType([
+      {
+        featureType: "transit.station",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+      {
+        featureType: "poi",
+        elementType: "labels.text",
+        stylers: [{ visibility: "on" }],
+      },
+    ]);
+
+    this.map = new google.maps.Map(document.getElementById("map"), {
       center: this.currentLocation,
       zoom: 19,
       mapId: "adf136d39bc00bf9",
+      // Only use normal map type
+      mapTypeControlOptions: {
+        mapTypeIds: ["roadmap"],
+      },
+      mapTypeControl: false,
     });
+
+    this.map.mapTypes.set('map', styledMapType);
+    this.map.setMapTypeId('map');
 
     this.pushMarker(this.currentLocation, "Bạn đang ở đây", "current");
     return this.map;
