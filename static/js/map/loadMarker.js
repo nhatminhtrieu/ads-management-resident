@@ -19,6 +19,6 @@ export default function loadMarker(map) {
       map.pushMarker(ad.coordinate, ad.title, "ad", contentString);
     });
   };
-  xhttp.open("GET", "http://localhost:3456/advertisement", true);
+  xhttp.open("GET", "http://localhost:3456/advertisement/locations", true);
   xhttp.send();
 }

@@ -1,6 +1,10 @@
 import { IMap } from "./map/Map.js";
 import { Service } from "./service/Service.js";
 import loadMarker from "./map/loadMarker.js";
+import { hideSidebar, showSidebar } from "./service/handleBannerCard.js";
+
+// toggle is false means the side bar is being hidden
+var toggle = false;
 async function main() {
   const map = new IMap();
   await map.initMap();
@@ -8,11 +12,18 @@ async function main() {
   const service = new Service(map);
 
   service.moveToCurrentLocation();
-  // service.showAllMarker();
   loadMarker(map);
-  // map.map.addListener("click", (event) => {
-  //   map.pushMarker(event.latLng, "Vị trí bạn chọn", "default");
-  // });
+  const toggleButton = document.getElementById("collapse-btn");
+  toggleButton.onclick = () => {
+    if (toggle) {
+      hideSidebar();
+      toggleButton.innerHTML = '<i class="bi bi-caret-right-fill"></i>';
+    } else {
+      showSidebar();
+      toggleButton.innerHTML = '<i class="bi bi-caret-left-fill"></i>';
+    }
+    toggle = !toggle;
+  };
 }
 
 main();
