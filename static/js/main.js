@@ -12,6 +12,7 @@ async function main() {
   const service = new Service(map);
 
   service.moveToCurrentLocation();
+  service.showAllMarker();
   loadMarker(map);
   const toggleButton = document.getElementById("collapse-btn");
   toggleButton.onclick = () => {
