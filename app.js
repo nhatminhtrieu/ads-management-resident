@@ -6,7 +6,7 @@ const app = express();
 const port = 3456;
 
 app.get("/", (req, res) => {
-  res.send("this is homepage")
+  res.send("this is homepage");
 });
 
 app.use("/advertisement", AdvertisementRouter);

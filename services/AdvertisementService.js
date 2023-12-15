@@ -1,4 +1,4 @@
-import AdvertisementRepository from "../repositories/AdvertisementRepository.js";
+import AdvertisementRepository from "../database/repositories/AdvertisementRepository.js";
 
 export default class AdvertisementService {
   constructor() {
