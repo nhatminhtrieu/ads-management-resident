@@ -9,6 +9,7 @@ export class IMap {
     this.userSelectedMarker = null;
     this.infoWindow = null;
     this.banners = new Banners();
+    this.cluster = null;
   }
 
   async initMap() {
@@ -49,6 +50,7 @@ export class IMap {
     this.map.setMapTypeId("map");
 
     this.updateCurrentLoc(this.currentLocation, "Bạn đang ở đây");
+    this.initCluster();
     return this.map;
   }
 
@@ -161,5 +163,20 @@ export class IMap {
       };
     else;
     return { name: data.displayName.text, address: data.formattedAddress };
+  }
+
+  initCluster() {
+    const markers = this.marker.map((marker) => marker.marker);
+    const map = this.map;
+    this.cluster = new markerClusterer.MarkerClusterer({ markers, map });
+  }
+
+  setCluster() {
+    const markers = this.marker.map((marker) => marker.marker);
+    this.cluster.addMarkers(markers);
+  }
+
+  removeCluster() {
+    this.cluster.clearMarkers();
   }
 }

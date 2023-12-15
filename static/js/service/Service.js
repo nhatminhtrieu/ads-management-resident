@@ -65,6 +65,11 @@ export class Service {
 
     toggleAds.addEventListener("change", (event) => {
       this.map.setMapOnAll(event.target.checked ? this.map.map : null);
+      event.target.checked
+        ? this.map.cluster.addMarkers(
+            this.map.marker.map((marker) => marker.marker)
+          )
+        : this.map.cluster.clearMarkers();
     });
   }
 
@@ -117,8 +122,6 @@ export class Service {
   }
 
   clusterMarkers() {
-    const markers = this.map.marker.map((marker) => marker.marker);
-    const map = this.map.map;
-    new markerClusterer.MarkerClusterer({ markers, map });
+    this.map.setCluster();
   }
 }
