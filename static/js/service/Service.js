@@ -17,12 +17,8 @@ export class Service {
     locationButton.addEventListener("click", async () => {
       try {
         const pos = await this.map.getCurrentLocation();
-        // update new current location if user move
-        if (JSON.stringify(this.map.currentLocation) !== JSON.stringify(pos)) {
-          this.map.currentMarker.setMap(null);
-          this.map.currentLocation = pos;
-        }
-        this.map.pushMarker(pos, "Bạn đang ở đây", "current");
+        this.map.currentLocation = pos;
+        this.map.updateCurrentLoc(pos, "Bạn đang ở đây");
         this.map.map.setCenter(pos);
         this.map.map.setZoom(19);
       } catch (error) {
@@ -55,7 +51,11 @@ export class Service {
             </div>
         `;
 
-    container.classList.add("d-flex", "container-toggle", "justify-content-end");
+    container.classList.add(
+      "d-flex",
+      "container-toggle",
+      "justify-content-end"
+    );
     container.appendChild(toggleAds);
     container.appendChild(toggleReports);
 
@@ -80,22 +80,24 @@ export class Service {
 
   preloadCaptcha() {
     // Use <div id="captcha"></div> to render captcha
-    turnstile.render('#captcha', {
-      sitekey: '0x4AAAAAAAOLF5GT_0tyAUJJ',
-      theme: 'auto',
+    turnstile.render("#captcha", {
+      sitekey: "0x4AAAAAAAOLF5GT_0tyAUJJ",
+      theme: "auto",
       callback: (token) => {
-        console.log('Captcha solved')
-      }
+        console.log("Captcha solved");
+      },
     });
   }
 
   catchUserSelectedLocation() {
     this.map.map.addListener("click", async (event) => {
       // This modified func will allow to show only one userSelectedMarker
-      this.map.pushMarker(event.latLng, "Vị trí bạn chọn", "userSelected");
+      this.map.updateSelectedMarker(event.latLng, "Vị trí bạn chọn");
 
       // Update banner
-      this.map.banners.setBannersForUserSelection(await this.map.getNameAndAddressFromCoordinate(event.latLng));
+      this.map.banners.setBannersForUserSelection(
+        await this.map.getNameAndAddressFromCoordinate(event.latLng)
+      );
     });
   }
 }

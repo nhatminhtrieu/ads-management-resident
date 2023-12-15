@@ -1,4 +1,5 @@
 import Banners from "../service/handleBannerCard.js";
+import CustomMarker from "./Marker.js";
 export class IMap {
   constructor() {
     this.map = null;
@@ -6,39 +7,14 @@ export class IMap {
     this.currentLocation = null;
     this.currentMarker = null;
     this.userSelectedMarker = null;
-    this.infoWindow = [];
-    this.pinCustom = {
-      default: {
-        background: "#FBBC04",
-        glyphColor: "#ff8300",
-        scale: 1.5,
-      },
-      ad: {
-        background: "#6600ff",
-        glyph: "QC",
-        glyphColor: "#ffffff",
-        borderColor: "#6600ff",
-      },
-      current: {
-        glyph: (() => {
-          const glyImg = document.createElement("img");
-          glyImg.src = "../../static/assets/CurrentIcon.svg";
-          return glyImg;
-        })(),
-        scale: 0,
-      },
-      userSelected: {
-        background: "#ff0000",
-        glyphColor: "#ffffff",
-        scale: 1.5,
-      },
-    };
+    this.infoWindow = null;
     this.banners = new Banners();
   }
 
   async initMap() {
-    const { Map } = await google.maps.importLibrary("maps");
+    await google.maps.importLibrary("maps");
     this.currentLocation = await this.getCurrentLocation();
+    this.infoWindow = new google.maps.InfoWindow();
 
     const styledMapType = new google.maps.StyledMapType([
       {
@@ -72,7 +48,7 @@ export class IMap {
     this.map.mapTypes.set("map", styledMapType);
     this.map.setMapTypeId("map");
 
-    this.pushMarker(this.currentLocation, "Bạn đang ở đây", "current");
+    this.updateCurrentLoc(this.currentLocation, "Bạn đang ở đây");
     return this.map;
   }
 
@@ -106,45 +82,49 @@ export class IMap {
     return pos;
   }
 
-  async pushMarker(position, title, defaultStyle = "", content = title) {
-    const { AdvancedMarkerElement, PinElement } =
-      await google.maps.importLibrary("marker");
-    const pin = new PinElement(this.pinCustom[defaultStyle]);
-    const marker = new AdvancedMarkerElement({
-      position: position,
-      map: this.map,
+  async pushCustomMarker(position, title, content = title, zoning = true) {
+    const marker = new CustomMarker(
+      this.map,
+      position,
       title,
-      content: defaultStyle === "" ? null : pin.element,
-    });
-
-    const infoWindow = new google.maps.InfoWindow({
-      content,
-    });
-
+      zoning ? "zoning" : "not_zoning"
+    );
+    await marker.init();
     marker.addListener("click", () => {
-      infoWindow.open({
-        anchor: marker,
+      this.infoWindow.setContent(content);
+      this.infoWindow.open({
+        anchor: marker.marker,
         map: this.map,
       });
-    });
-
-    marker.addListener("click", () => {
       this.banners.setBannersForAds(position);
       this.userSelectedMarker.setMap(null);
     });
+    this.marker.push(marker);
+  }
 
-    // Allow only one userSelectedMarker
-    if (defaultStyle === "userSelected") {
-      // Clear old marker if exist
-      if (this.userSelectedMarker) this.userSelectedMarker.setMap(null);
-
-      // Set new marker
-      this.userSelectedMarker = marker;
+  updateCurrentLoc(position, title) {
+    if (this.currentMarker) {
+      this.currentMarker.setPosition(position);
     } else {
-      // Not add marker of current location and userSelectedMarker to marker array
-      JSON.stringify(position) === JSON.stringify(this.currentLocation)
-        ? (this.currentMarker = marker)
-        : this.marker.push(marker);
+      const marker = new CustomMarker(this.map, position, title, "current");
+      marker.init().then(() => {
+        // Set new marker
+        this.currentMarker = marker;
+      });
+    }
+  }
+  updateSelectedMarker(position, title) {
+    // Clear old marker if exist
+    if (this.userSelectedMarker) {
+      this.userSelectedMarker.setMap(this.map);
+      this.userSelectedMarker.setPosition(position);
+      this.infoWindow.close();
+    } else {
+      const marker = new CustomMarker(this.map, position, title, "select");
+      marker.init().then(() => {
+        // Set new marker
+        this.userSelectedMarker = marker;
+      });
     }
   }
 

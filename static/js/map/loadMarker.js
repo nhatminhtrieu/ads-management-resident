@@ -16,7 +16,8 @@ export default function loadMarker(map) {
     const list = JSON.parse(xhttp.responseText);
     list.forEach((ad) => {
       const contentString = createContent(ad);
-      map.pushMarker(ad.coordinate, ad.title, "ad", contentString);
+      // map.pushMarker(ad.coordinate, ad.title, "ad", contentString);
+      map.pushCustomMarker(ad.coordinate, ad.title, contentString, ad.zoning);
     });
   };
   xhttp.open("GET", "http://localhost:3456/advertisement/locations", true);
