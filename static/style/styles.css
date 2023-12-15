@@ -101,6 +101,7 @@
   padding: 2rem;
   height: 100vh;
   display: none;
+  overflow: scroll;
 }
 #collapse-btn {
   position: absolute;
@@ -111,13 +112,13 @@
   box-shadow: 5px 2px 7px 1px rgba(0, 0, 0, 0.3);
 }
 
-.non-ads-card{
+.non-ads-card {
   background-color: #e5f6fd;
   border: none;
   color: #014361;
 }
 
-.user-selection-card{
+.user-selection-card {
   background-color: #edf7ed;
   border: none;
   color: #224924;
