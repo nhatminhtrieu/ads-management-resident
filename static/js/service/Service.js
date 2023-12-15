@@ -79,23 +79,29 @@ export class Service {
   }
 
   preloadCaptcha() {
-    // Use <div id="captcha"></div> to render captcha
-    turnstile.render('#captcha', {
-      sitekey: '0x4AAAAAAAOLF5GT_0tyAUJJ',
-      theme: 'auto',
-      callback: async (token) => {
-        // Verify captcha here
-        const response = await fetch('/verify-captcha', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ token: token })
+    window.onload = function() {
+      // Check if captcha element exists
+      const captchaElement = document.querySelector('#captcha');
+      if (captchaElement) {
+        // Use <div id="captcha"></div> to render captcha
+        turnstile.render('#captcha', {
+          sitekey: '0x4AAAAAAAOLF5GT_0tyAUJJ',
+          theme: 'auto',
+          callback: async (token) => {
+            // Verify captcha here
+            const response = await fetch('/verify-captcha', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ token: token })
+            });
+            const outcome = await response.json();
+            console.log(outcome);
+          }
         });
-        const outcome = await response.json();
-        console.log(outcome);
-      }
-    });
+      } 
+    };
   }
 
   catchUserSelectedLocation() {
