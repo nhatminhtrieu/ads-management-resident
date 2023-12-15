@@ -95,7 +95,7 @@ export class Service {
       this.map.pushMarker(event.latLng, "Vị trí bạn chọn", "userSelected");
 
       // Update banner
-      this.map.banners.setBannersForUserSelection(await this.map.getNameAndAddressFromCoordinate(event.latLng));
+      this.map.banners.setBannersForUserSelection(await this.map.getDetailsFromCoordinate(event.latLng));
     });
   }
 }
