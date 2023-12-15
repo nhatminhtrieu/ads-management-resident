@@ -115,4 +115,10 @@ export class Service {
       );
     });
   }
+
+  clusterMarkers() {
+    const markers = this.map.marker.map((marker) => marker.marker);
+    const map = this.map.map;
+    new markerClusterer.MarkerClusterer({ markers, map });
+  }
 }

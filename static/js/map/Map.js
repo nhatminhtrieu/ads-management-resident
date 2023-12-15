@@ -97,7 +97,7 @@ export class IMap {
         map: this.map,
       });
       this.banners.setBannersForAds(position);
-      this.userSelectedMarker.setMap(null);
+      this.userSelectedMarker && this.userSelectedMarker.setMap(null);
     });
     this.marker.push(marker);
   }
@@ -138,8 +138,7 @@ export class IMap {
       geocoder
         .geocode({ location: latlng })
         .then((response) => {
-          if (response.results[0])
-            resolve(response.results[0].place_id);
+          if (response.results[0]) resolve(response.results[0].place_id);
           else reject("No results found");
         })
         .catch((e) => reject("Geocoder failed due to: " + e));
@@ -156,8 +155,11 @@ export class IMap {
     const firstComponentAddress = data.formattedAddress.split(",")[0];
 
     if (firstComponentAddress === data.displayName.text)
-      return { name: "Vị trí chưa được đặt tên", address: data.formattedAddress };
+      return {
+        name: "Vị trí chưa được đặt tên",
+        address: data.formattedAddress,
+      };
     else;
-      return { name: data.displayName.text, address: data.formattedAddress };
+    return { name: data.displayName.text, address: data.formattedAddress };
   }
 }

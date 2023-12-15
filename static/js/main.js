@@ -12,10 +12,10 @@ async function main() {
 
   service.moveToCurrentLocation();
   service.showAllMarker();
-  loadMarker(map);
+  await loadMarker(map);
+  service.clusterMarkers();
   service.catchUserSelectedLocation();
   service.preloadCaptcha();
-  
   const toggleButton = document.getElementById("collapse-btn");
   toggleButton.onclick = () => {
     if (toggle) {
