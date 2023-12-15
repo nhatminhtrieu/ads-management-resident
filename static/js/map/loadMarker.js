@@ -10,16 +10,21 @@ function createContent(advertisement) {
     "</div>";
   return contentString;
 }
-export default function loadMarker(map) {
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function () {
-    const list = JSON.parse(xhttp.responseText);
-    list.forEach((ad) => {
+export default async function loadMarker(map) {
+  try {
+    const response = await fetch(
+      "http://localhost:3456/advertisement/locations"
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const list = await response.json();
+    for await (const ad of list) {
       const contentString = createContent(ad);
       // map.pushMarker(ad.coordinate, ad.title, "ad", contentString);
       map.pushCustomMarker(ad.coordinate, ad.title, contentString, ad.zoning);
-    });
-  };
-  xhttp.open("GET", "http://localhost:3456/advertisement/locations", true);
-  xhttp.send();
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }

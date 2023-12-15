@@ -56,24 +56,26 @@ class Banners {
 
   setBannersForAds(coordinate) {
     // Clear the old banner
-    this.cardList.innerHTML = '';
+    this.cardList.innerHTML = "";
 
-    const xhttp = new XMLHttpRequest();
-    xhttp.onload = () => {
-      const ads = JSON.parse(xhttp.responseText);
-      ads.forEach((ad) => {
-        const card = this.createCardForAds(ad);
-        this.cardList.appendChild(card);
-        this.description.innerHTML = "";
-        this.description.appendChild(this.cardList);
-      });
-    };
-    xhttp.open(
-      "GET",
-      `http://localhost:3456/advertisement?lat=${coordinate.lat}&lng=${coordinate.lng}`,
-      true
-    );
-    xhttp.send();
+    fetch(
+      `http://localhost:3456/advertisement?lat=${coordinate.lat}&lng=${coordinate.lng}`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((ads) => {
+        ads.forEach((ad) => {
+          const card = this.createCardForAds(ad);
+          this.cardList.appendChild(card);
+          this.description.innerHTML = "";
+          this.description.appendChild(this.cardList);
+        });
+      })
+      .catch((error) => console.error(error));
   }
 
   createCardForNonAds() {
@@ -96,8 +98,7 @@ class Banners {
 
     const info = document.createElement("div");
     info.classList.add("card-text");
-    info.innerHTML =
-      `<strong> Chưa có dữ liệu! </strong>
+    info.innerHTML = `<strong> Chưa có dữ liệu! </strong>
         <div>Vui lòng chọn điểm trên bản đồ để xem</div>`;
 
     rightSide.appendChild(title);
@@ -130,18 +131,16 @@ class Banners {
 
     const info = document.createElement("div");
     info.classList.add("card-text");
-    info.innerHTML =
-      `<strong> ${cardInfo.name} </strong>
+    info.innerHTML = `<strong> ${cardInfo.name} </strong>
         <div> ${cardInfo.address} </div>`;
 
     const functionRow = document.createElement("div");
     functionRow.classList.add("btn-row");
     // Use empty div to align the button to the right
-    functionRow.innerHTML =
-      `<div></div>
+    functionRow.innerHTML = `<div></div>
       <button class="btn btn-outline-danger">
         <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm
-      </button>`
+      </button>`;
 
     rightSide.appendChild(title);
     rightSide.appendChild(info);
@@ -154,10 +153,9 @@ class Banners {
     return card;
   }
 
-
   setBannersForUserSelection(cardInfo) {
     // Clear the old banner
-    this.cardList.innerHTML = '';
+    this.cardList.innerHTML = "";
 
     const card1 = this.createCardForNonAds();
     const card2 = this.createCardForUserSelection(cardInfo);
