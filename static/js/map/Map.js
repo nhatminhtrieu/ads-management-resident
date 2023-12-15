@@ -132,30 +132,32 @@ export class IMap {
     this.marker.forEach((marker) => marker.setMap(map));
   }
 
-  async convertCoordinate2Address(latlng) {
+  async getPlacesID(latlng) {
     const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject) => {
       geocoder
         .geocode({ location: latlng })
         .then((response) => {
           if (response.results[0])
-            resolve(response.results[0].formatted_address);
+            resolve(response.results[0].place_id);
           else reject("No results found");
         })
         .catch((e) => reject("Geocoder failed due to: " + e));
     });
   }
 
-  async getNameAndAddressFromCoordinate(latlng) {
-    const rawAddress = await this.convertCoordinate2Address(latlng);
-    const numberOfPart = rawAddress.split(",").length;
+  async getDetailsFromCoordinate(latlng) {
+    const placeID = await this.getPlacesID(latlng);
 
-    if (numberOfPart >= 6) {
-      const name = rawAddress.split(",")[0];
-      const address = rawAddress.split(",").slice(1).join(",");
-      return { name, address };
-    } else {
-      return { name: "Vị trí chưa được đặt tên", address: rawAddress };
-    }
+    const response = await fetch(
+      `https://places.googleapis.com/v1/places/${placeID}?fields=displayName,formattedAddress&key=AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA`
+    );
+    const data = await response.json();
+    const firstComponentAddress = data.formattedAddress.split(",")[0];
+
+    if (firstComponentAddress === data.displayName.text)
+      return { name: "Vị trí chưa được đặt tên", address: data.formattedAddress };
+    else;
+      return { name: data.displayName.text, address: data.formattedAddress };
   }
 }
