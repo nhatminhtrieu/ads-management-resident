@@ -14,6 +14,7 @@ async function main() {
   service.showAllMarker();
   loadMarker(map);
   service.catchUserSelectedLocation();
+  service.preloadCaptcha();
   
   const toggleButton = document.getElementById("collapse-btn");
   toggleButton.onclick = () => {
