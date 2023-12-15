@@ -5,7 +5,7 @@ export class IMap {
     this.marker = [];
     this.currentLocation = null;
     this.currentMarker = null;
-    this.userSelectedLocation = null;
+    this.userSelectedMarker = null;
     this.infoWindow = [];
     this.pinCustom = {
       default: {
@@ -130,9 +130,8 @@ export class IMap {
 
     marker.addListener("click", () => {
       this.banners.setBannersForAds(position);
+      this.userSelectedMarker.setMap(null);
     });
-
-
 
     // Allow only one userSelectedMarker
     if (defaultStyle === "userSelected") {
