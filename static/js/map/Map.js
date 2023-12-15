@@ -1,11 +1,11 @@
-import setBanners from "../service/handleBannerCard.js";
+import Banners from "../service/handleBannerCard.js";
 export class IMap {
   constructor() {
     this.map = null;
     this.marker = [];
     this.currentLocation = null;
     this.currentMarker = null;
-    this.userSelectedLocation = null;
+    this.userSelectedMarker = null;
     this.infoWindow = [];
     this.pinCustom = {
       default: {
@@ -33,6 +33,7 @@ export class IMap {
         scale: 1.5,
       },
     };
+    this.banners = new Banners();
   }
 
   async initMap() {
@@ -128,13 +129,9 @@ export class IMap {
     });
 
     marker.addListener("click", () => {
-      setBanners(position);
+      this.banners.setBannersForAds(position);
+      this.userSelectedMarker.setMap(null);
     });
-
-    //not add marker of current location to marker array
-    JSON.stringify(position) === JSON.stringify(this.currentLocation)
-      ? (this.currentMarker = marker)
-      : this.marker.push(marker);
 
     // Allow only one userSelectedMarker
     if (defaultStyle === "userSelected") {
@@ -143,6 +140,11 @@ export class IMap {
 
       // Set new marker
       this.userSelectedMarker = marker;
+    } else {
+      // Not add marker of current location and userSelectedMarker to marker array
+      JSON.stringify(position) === JSON.stringify(this.currentLocation)
+        ? (this.currentMarker = marker)
+        : this.marker.push(marker);
     }
   }
 
@@ -162,5 +164,18 @@ export class IMap {
         })
         .catch((e) => reject("Geocoder failed due to: " + e));
     });
+  }
+
+  async getNameAndAddressFromCoordinate(latlng) {
+    const rawAddress = await this.convertCoordinate2Address(latlng);
+    const numberOfPart = rawAddress.split(",").length;
+
+    if (numberOfPart >= 6) {
+      const name = rawAddress.split(",")[0];
+      const address = rawAddress.split(",").slice(1).join(",");
+      return { name, address };
+    } else {
+      return { name: "Vị trí chưa được đặt tên", address: rawAddress };
+    }
   }
 }
