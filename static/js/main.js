@@ -1,6 +1,7 @@
 import { IMap } from "./map/Map.js";
 import { Service } from "./service/Service.js";
 import loadMarker from "./map/loadMarker.js";
+import SideBar from "./service/SideBar.js";
 
 // toggle is false means the side bar is being hidden
 var toggle = false;
@@ -16,18 +17,6 @@ async function main() {
   await loadMarker(map);
   service.clusterMarkers();
   service.catchUserSelectedLocation();
-  
-  const toggleButton = document.getElementById("collapse-btn");
-  toggleButton.onclick = () => {
-    if (toggle) {
-      map.banners.hideSidebar();
-      toggleButton.innerHTML = '<i class="bi bi-caret-right-fill"></i>';
-    } else {
-      map.banners.showSidebar();
-      toggleButton.innerHTML = '<i class="bi bi-caret-left-fill"></i>';
-    }
-    toggle = !toggle;
-  };
 }
 
 main();

@@ -1,21 +1,10 @@
 class Banners {
   constructor() {
-    this.description = document.getElementById("description");
-    this.description.style.display = "block";
+    this.root = document.createElement("div");
 
     this.cardList = document.createElement("div");
     this.cardList.classList.add("card-list");
     this.cardList.id = "card-list";
-
-    this.sidebar = document.getElementById("side-bar");
-  }
-
-  hideSidebar() {
-    this.sidebar.style.width = "0px";
-  }
-
-  showSidebar() {
-    this.sidebar.style.width = "408px";
   }
 
   createCardForAds(cardInfo) {
@@ -71,8 +60,8 @@ class Banners {
         ads.forEach((ad) => {
           const card = this.createCardForAds(ad);
           this.cardList.appendChild(card);
-          this.description.innerHTML = "";
-          this.description.appendChild(this.cardList);
+          this.root.innerHTML = "";
+          this.root.appendChild(this.cardList);
         });
       })
       .catch((error) => console.error(error));
@@ -162,8 +151,8 @@ class Banners {
 
     this.cardList.appendChild(card1);
     this.cardList.appendChild(card2);
-    this.description.innerHTML = "";
-    this.description.appendChild(this.cardList);
+    this.root.innerHTML = "";
+    this.root.appendChild(this.cardList);
   }
 }
 
