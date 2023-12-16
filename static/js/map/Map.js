@@ -1,3 +1,4 @@
+import SideBar from "../service/SideBar.js";
 import Banners from "../service/handleBannerCard.js";
 import CustomMarker from "./Marker.js";
 export class IMap {
@@ -8,6 +9,7 @@ export class IMap {
     this.currentMarker = null;
     this.userSelectedMarker = null;
     this.infoWindow = null;
+    this.sideBar = new SideBar();
     this.banners = new Banners();
     this.cluster = null;
   }
@@ -15,7 +17,13 @@ export class IMap {
   async initMap() {
     await google.maps.importLibrary("maps");
     this.currentLocation = await this.getCurrentLocation();
+    this.sideBar.init();
+
     this.infoWindow = new google.maps.InfoWindow();
+    this.infoWindow.addListener("closeclick", () => {
+      this.sideBar.removeContent(1);
+      this.sideBar.hide();
+    });
 
     const styledMapType = new google.maps.StyledMapType([
       {
@@ -37,7 +45,7 @@ export class IMap {
 
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: this.currentLocation,
-      zoom: 19,
+      zoom: 16,
       mapId: "adf136d39bc00bf9",
       // Only use normal map type
       mapTypeControlOptions: {
@@ -48,7 +56,6 @@ export class IMap {
 
     this.map.mapTypes.set("map", styledMapType);
     this.map.setMapTypeId("map");
-
     this.updateCurrentLoc(this.currentLocation, "Bạn đang ở đây");
     this.initCluster();
     return this.map;
@@ -67,14 +74,14 @@ export class IMap {
           });
         },
         () => {
-          // if user denied permission, current location is at HCMUS
+          // If user denied permission, current location is at HCMUS
           resolve({
             lat: 10.762838024314062,
             lng: 106.68248463223016,
           });
         },
         {
-          // this options means that getCurrentPosition will wait for 5s before timeout
+          // This options means that getCurrentPosition will wait for 5s before timeout
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 0,
@@ -92,19 +99,26 @@ export class IMap {
       zoning ? "zoning" : "not_zoning"
     );
     await marker.init();
+
     marker.addListener("click", () => {
+      // Update and open info window
       this.infoWindow.setContent(content);
       this.infoWindow.open({
         anchor: marker.marker,
         map: this.map,
       });
+
+      // Update side bar
       this.banners.setBannersForAds(position);
+      this.sideBar.setContent(1, this.banners.root);
+      this.sideBar.show();
       this.userSelectedMarker && this.userSelectedMarker.setMap(null);
     });
     this.marker.push(marker);
   }
 
   updateCurrentLoc(position, title) {
+    // Update position of the marker
     if (this.currentMarker) {
       this.currentMarker.setPosition(position);
     } else {
@@ -115,6 +129,7 @@ export class IMap {
       });
     }
   }
+
   updateSelectedMarker(position, title) {
     // Clear old marker if exist
     if (this.userSelectedMarker) {

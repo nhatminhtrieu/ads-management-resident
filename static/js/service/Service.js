@@ -126,6 +126,8 @@ export class Service {
       this.map.banners.setBannersForUserSelection(
         await this.map.getDetailsFromCoordinate(event.latLng)
       );
+      this.map.sideBar.setContent(1, this.map.banners.root);
+      this.map.sideBar.show();
     });
   }
 
