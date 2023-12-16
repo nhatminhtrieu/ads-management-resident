@@ -3,6 +3,7 @@ import cors from "cors";
 import Connection from "./database/Connection.js";
 import AdvertisementRouter from "./routes/advertisementRoutes.js";
 import VerifyCaptchaRouter from "./routes/verifyCaptchaRoutes.js";
+import ImageRouter from "./routes/imageRoutes.js";
 
 const app = express();
 const port = 3456;
@@ -18,6 +19,8 @@ app.use("/advertisement", AdvertisementRouter);
 app.use("/static", express.static("static"));
 
 app.use("/verify-captcha", VerifyCaptchaRouter);
+
+app.use("/image", ImageRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on 127.0.0.1:${port}`);

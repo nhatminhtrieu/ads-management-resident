@@ -5,6 +5,19 @@ class Banners {
     this.cardList = document.createElement("div");
     this.cardList.classList.add("card-list");
     this.cardList.id = "card-list";
+
+    this.sidebar = document.getElementById("side-bar");
+
+    this.infoModal = document.querySelector("#infoModal");
+    this.infoModalBody = document.querySelector("#infoModal .modal-body");
+  }
+
+  hideSidebar() {
+    this.sidebar.style.width = "0px";
+  }
+
+  showSidebar() {
+    this.sidebar.style.width = "408px";
   }
 
   createCardForAds(cardInfo) {
@@ -28,7 +41,7 @@ class Banners {
     const row = document.createElement("div");
     row.classList.add("btn-row");
     row.innerHTML =
-      '<button class="btn btn-icon">\
+      '<button type="button" class="btn btn-icon" id="info" data-bs-toggle="modal" data-bs-target="#infoModal">\
         <i class="bi bi-info-circle"></i>\
         </button>\
         <button class="btn btn-outline-danger">\
@@ -46,6 +59,7 @@ class Banners {
   setBannersForAds(coordinate) {
     // Clear the old banner
     this.cardList.innerHTML = "";
+    this.infoModalBody.innerHTML = "";
 
     fetch(
       `http://localhost:3456/advertisement?lat=${coordinate.lat}&lng=${coordinate.lng}`
@@ -62,7 +76,11 @@ class Banners {
           this.cardList.appendChild(card);
           this.root.innerHTML = "";
           this.root.appendChild(this.cardList);
+
+          const modal = this.createModalForAd(ad);
         });
+
+        this.handleViewDetail();
       })
       .catch((error) => console.error(error));
   }
@@ -153,6 +171,56 @@ class Banners {
     this.cardList.appendChild(card2);
     this.root.innerHTML = "";
     this.root.appendChild(this.cardList);
+  }
+
+  createModalForAd(ad) {
+    const wrap = document.createElement("div");
+    wrap.setAttribute("id", "wrap");
+    wrap.style = `display: none;`;
+
+    const img = document.createElement("img");
+    img.style = `width: 400px; height: 300px; object-fit: cover;`;
+    fetch(`http://localhost:3456/images?id=${ad.imgs[0]}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((image) => {
+        img.setAttribute("src", image.url);
+      })
+      .catch((error) => {
+        img.setAttribute(
+          "src",
+          "https://images.unsplash.com/photo-1553096442-8fe2118fb927?ixid=M3w1NDE3MjR8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTcwMjc0NjU0MHww&ixlib=rb-4.0.3"
+        );
+      });
+
+    const exp = new Date(ad.exp);
+    const date = document.createElement("div");
+    date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toUTCString()}`;
+
+    wrap.appendChild(img);
+    wrap.appendChild(date);
+
+    this.infoModalBody.appendChild(wrap);
+  }
+
+  handleViewDetail() {
+    const infoBtns = document.querySelectorAll("button#info");
+    infoBtns &&
+      infoBtns.forEach((btn, id) => {
+        btn.addEventListener("click", () => {
+          const contents = document.querySelectorAll(
+            "#infoModal .modal-body div#wrap"
+          );
+          contents.forEach(
+            (content) => (content.style = `display: none !important;`)
+          );
+          console.log(contents[id]);
+          contents[
+            id
+          ].style = `display: flex !important; flex-direction: column; align-items: center; gap: 20px;`;
+        });
+      });
   }
 }
 
