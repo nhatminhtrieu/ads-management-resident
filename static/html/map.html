@@ -88,6 +88,101 @@
           </div>
         </div>
       </div>
+      <div
+        class="modal fade"
+        id="reportModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="reportModalCenter"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="reportModalTitle">Báo cáo vi phạm</h5>
+              <button
+                type="button"
+                class="close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="type" class="form-label">Hình thức báo cáo</label>
+                  <select class="form-select" aria-label="type">
+                    <option value="tgsp" selected>Tố giác sai phạm</option>
+                    <option value="dknd">Đăng ký nội dung</option>
+                    <option value="dgyk">Đóng góp ý kiến</option>
+                    <option value="gdtc">Giải đáp thắc mắc</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="name" class="form-label">Họ và tên</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Nguyễn Văn A"
+                    aria-label="name"
+                    id="name"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" />
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Số điện thoại</label>
+                  <input type="tel" class="form-control" id="phone" />
+                </div>
+                <div class="mb-3">
+                  <label for="content" class="form-label"
+                    >Nội dung báo cáo</label
+                  >
+                  <!-- Embed the HTMEditor -->
+                  <textarea id="content"></textarea>
+                  <script
+                    src="https://htmeditor.com/js/htmeditor.min.js"
+                    htmeditor_textarea="content"
+                    editor_height="360"
+                    run_local="no"
+                  ></script>
+                </div>
+                <div class="mb-3">
+                  <label for="formFileMultiple" class="form-label"
+                    >Hình ảnh minh họa</label
+                  >
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="formFileMultiple"
+                    multiple
+                    aria-describedby="fileHelp"
+                    accept="image/*"
+                  />
+                  <div id="fileHelp" class="form-text">Tối đa 02 hình.</div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-dismiss="modal"
+              >
+                Bỏ qua
+              </button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>

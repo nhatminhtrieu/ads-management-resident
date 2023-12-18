@@ -44,7 +44,7 @@ class Banners {
       '<button type="button" class="btn btn-icon" id="info" data-bs-toggle="modal" data-bs-target="#infoModal">\
         <i class="bi bi-info-circle"></i>\
         </button>\
-        <button class="btn btn-outline-danger">\
+        <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">\
         <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm\
         </button>\
     ';
@@ -145,7 +145,7 @@ class Banners {
     functionRow.classList.add("btn-row");
     // Use empty div to align the button to the right
     functionRow.innerHTML = `<div></div>
-      <button class="btn btn-outline-danger">
+      <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">
         <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm
       </button>`;
 
