@@ -39,6 +39,33 @@ export default class SideBar {
       searchBoxElement.type = 'text';
       searchBoxElement.placeholder = 'Enter an address...';
       this.setContent(0, searchBoxElement); // Use setContent to display search box
+
+      // Apply Google Autocomplete to the search box
+      if (typeof google.maps.places === 'undefined') {
+        console.error('Google Maps JavaScript API and Places library are not loaded');
+      } else {
+        console.log("I passed if")
+        const searchBox = new google.maps.places.SearchBox(searchBoxElement);
+
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener("places_changed", () => {
+          const places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // For each place, get the icon, name and location.
+          places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            console.log(place.name, place.geometry.location); // You can do something with the selected place here
+          });
+        });
+      }
     });
   }
 
