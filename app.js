@@ -20,7 +20,7 @@ app.use("/static", express.static("static"));
 app.use("/verify-captcha", VerifyCaptchaRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on 127.0.0.1:${port}`);
+  console.log(`Example app listening on http://127.0.0.1:${port}`);
 });
 
 Connection();

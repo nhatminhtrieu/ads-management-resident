@@ -29,6 +29,17 @@ export default class SideBar {
     this.description.innerHTML = "";
     this.description.appendChild(this.contents[this.active]);
     this.button.onclick = () => this.toggleVisible();
+    this.initSearchBox();
+  }
+
+  initSearchBox() {
+    const searchButton = document.querySelector('.bi-search');
+    searchButton.addEventListener('click', () => {
+      const searchBoxElement = document.createElement('input');
+      searchBoxElement.type = 'text';
+      searchBoxElement.placeholder = 'Enter an address...';
+      this.setContent(0, searchBoxElement); // Use setContent to display search box
+    });
   }
 
   changeActive(index) {
