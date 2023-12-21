@@ -25,6 +25,9 @@ async function main() {
   const captcha = await service.verifyCaptcha();
   form.setCaptcha(captcha);
   form.catchUserSubmitReport();
+
+  const sideBar = new SideBar();
+  sideBar.init(map);
 }
 
 main();
