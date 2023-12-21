@@ -9,22 +9,28 @@ export default class SideBar {
     this.visible = false;
     this.contents = [];
     this.defaultContent = document.createElement("div");
-    this.searchButton = document.querySelector('.bi-search');
-    this.searchBoxElement = document.createElement('input');
-    this.searchBoxElement.setAttribute('type', 'text');
-    this.searchBoxElement.setAttribute('placeholder', 'Enter an address...');
     this.defaultContent.style = `height: 100%;
     display: flex;
     justify-content: center;
     font-size: x-large;
     color: gray;
     align-items: center;`;
-    this.searchBoxElement.style = `width: 100%;
+
+
+    this.searchButton = document.querySelector('.bi-search');
+    this.searchBoxElement = document.createElement('input');
+    this.searchBoxElement.setAttribute('type', 'text');
+    this.searchBoxElement.setAttribute('placeholder', 'Enter an address...');
+
+    this.searchBoxElement.style = `
+    width: 50px; /* initial width */
     height: 30px;
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    font-size: small;`;
+    font-size: small;
+    transition: width 0.5s cubic-bezier(.5,1.3,.8,1.1), transform 0.3s; /* transition effect */`;
+
     this.defaultContent.innerHTML = "Chưa có thông tin";
   }
 
