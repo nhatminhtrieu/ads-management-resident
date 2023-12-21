@@ -32,6 +32,7 @@ export default class SideBar {
     this.initSearchBox(map);
   }
 
+  // To do: red marker on input address
   initSearchBox(map) {
     const searchButton = document.querySelector('.bi-search');
     searchButton.addEventListener('click', () => {
@@ -66,7 +67,10 @@ export default class SideBar {
             if (status == 'OK') {
               const latLng = results[0].geometry.location;
               map.map.setCenter(latLng); // Set the map center to the input address
-              console.log(place);
+
+              // Show a marker at the input address
+              map.updateSelectedMarker(latLng, place.formatted_address);
+
               return place; // return the formatted address
             } else {
               console.log('Geocode was not successful for the following reason: ' + status);
