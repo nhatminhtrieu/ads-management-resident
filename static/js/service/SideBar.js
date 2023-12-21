@@ -18,7 +18,7 @@ export default class SideBar {
     this.defaultContent.innerHTML = "Chưa có thông tin";
   }
 
-  init() {
+  init(map) {
     this.tabs[this.active].classList.add("tab-active");
     this.tabs.forEach((tab, id) => {
       this.contents.push(this.defaultContent);
@@ -29,10 +29,10 @@ export default class SideBar {
     this.description.innerHTML = "";
     this.description.appendChild(this.contents[this.active]);
     this.button.onclick = () => this.toggleVisible();
-    this.initSearchBox();
+    this.initSearchBox(map);
   }
 
-  initSearchBox() {
+  initSearchBox(map) {
     const searchButton = document.querySelector('.bi-search');
     searchButton.addEventListener('click', () => {
       const searchBoxElement = document.createElement('input');
@@ -41,31 +41,39 @@ export default class SideBar {
       this.setContent(0, searchBoxElement); // Use setContent to display search box
 
       // Apply Google Autocomplete to the search box
-      if (typeof google.maps.places === 'undefined') {
-        console.error('Google Maps JavaScript API and Places library are not loaded');
-      } else {
-        console.log("I passed if")
-        const searchBox = new google.maps.places.SearchBox(searchBoxElement);
+      const searchBox = new google.maps.places.SearchBox(searchBoxElement);
 
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener("places_changed", () => {
-          const places = searchBox.getPlaces();
+      // Create a new Geocoder
+      const geocoder = new google.maps.Geocoder();
 
-          if (places.length == 0) {
+      // Listen for the event fired when the user selects a prediction and retrieve
+      // more details for that place.
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+        // For each place, get the icon, name and location.
+        places.forEach((place) => {
+          if (!place.geometry || !place.geometry.location) {
+            console.log("Returned place contains no geometry");
             return;
           }
 
-          // For each place, get the icon, name and location.
-          places.forEach((place) => {
-            if (!place.geometry || !place.geometry.location) {
-              console.log("Returned place contains no geometry");
-              return;
+          geocoder.geocode({ 'address': place.formatted_address }, async (results, status) => {
+            if (status == 'OK') {
+              const latLng = results[0].geometry.location;
+              map.map.setCenter(latLng); // Set the map center to the input address
+              console.log(place);
+              return place; // return the formatted address
+            } else {
+              console.log('Geocode was not successful for the following reason: ' + status);
             }
-            console.log(place.name, place.geometry.location); // You can do something with the selected place here
           });
         });
-      }
+      });
     });
   }
 

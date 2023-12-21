@@ -17,6 +17,9 @@ async function main() {
   await loadMarker(map);
   service.clusterMarkers();
   service.catchUserSelectedLocation();
+
+  const sideBar = new SideBar();
+  sideBar.init(map);
 }
 
 main();
