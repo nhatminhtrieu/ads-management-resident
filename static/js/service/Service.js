@@ -135,32 +135,34 @@ export class Service {
   }
 
   async saveImgs(files) {
-    var res = [];
-    const imgs = Array.from(files);
+    const filePromises = files.map((file) => {
+      return new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const response = await fetch("http://localhost:3456/image/create", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                url: reader.result,
+                caption: file.name,
+                createAt: new Date(),
+              }),
+            });
 
-    for await (const file of imgs) {
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async function () {
-        const response = await fetch("http://localhost:3456/image/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            url: reader.result,
-            caption: file.name,
-            createAt: new Date(),
-          }),
-        });
+            res(await response.json());
+          } catch (error) {
+            rej(error);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    const fileIds = await Promise.all(filePromises);
 
-        const id = await response.json();
-        console.log(id);
-        res.push(id);
-      };
-    }
-
-    return res;
+    return fileIds;
   }
 
   catchUserSubmitReport() {
@@ -193,9 +195,7 @@ export class Service {
         e.preventDefault();
 
         const files = document.querySelector("input#formFileMultiple").files;
-        const imgs = await tmpThis.saveImgs(files);
-
-        console.log(imgs);
+        const imgsId = await tmpThis.saveImgs(Array.from(files));
 
         const response = await fetch("http://localhost:3456/report/create", {
           method: "POST",
@@ -208,7 +208,7 @@ export class Service {
             name: nameInput.value,
             phone: phoneInput.value,
             content: contentInput.value,
-            imgs: imgs,
+            imgs: imgsId,
             type: "issued",
           }),
         });
