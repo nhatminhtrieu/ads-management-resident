@@ -11,6 +11,9 @@ async function main() {
 
   const service = new Service(map);
 
+  const sideBar = new SideBar();
+  sideBar.init(map);
+
   service.moveToCurrentLocation();
   service.showAllMarker();
   service.preloadCaptcha();
@@ -25,9 +28,6 @@ async function main() {
   const captcha = await service.verifyCaptcha();
   form.setCaptcha(captcha);
   form.catchUserSubmitReport();
-
-  const sideBar = new SideBar();
-  sideBar.init(map);
 }
 
 main();

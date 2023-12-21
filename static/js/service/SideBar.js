@@ -39,12 +39,8 @@ export default class SideBar {
     this.description.innerHTML = "";
     this.description.appendChild(this.contents[this.active]);
     this.button.onclick = () => this.toggleVisible();
-    this.initSearchBox(map);
     this.searchBox = new google.maps.places.SearchBox(this.searchBoxElement);
     this.geoCoder = new google.maps.Geocoder();
-  }
-
-  initSearchBox(map) {
     this.searchButton.addEventListener('click', () => {
       this.setContent(0, this.searchBoxElement);
       this.searchBox.addListener("places_changed", () => {
@@ -57,7 +53,15 @@ export default class SideBar {
               const latLng = results[0].geometry.location;
               map.map.setCenter(latLng);
               map.updateSelectedMarker(latLng, place.formatted_address);
-              return place;
+
+              // Update banner for the selected place
+              map.banners.setBannersForUserSelection(
+                await map.getDetailsFromCoordinate(latLng)
+              );
+              map.sideBar.setContent(1, map.banners.root);
+              map.sideBar.show();
+
+              return latLng;
             } else {
               console.log('Geocode was not successful for the following reason: ' + status);
             }
@@ -66,6 +70,8 @@ export default class SideBar {
       });
     });
   }
+
+
 
   changeActive(index) {
     this.tabs[this.active].classList.remove("tab-active");
@@ -106,5 +112,9 @@ export default class SideBar {
   setContent(index, content) {
     this.contents[index] = content;
     this.changeActive(index);
+  }
+
+  showCard(cardElement) {
+    this.root.appendChild(cardElement);
   }
 }
