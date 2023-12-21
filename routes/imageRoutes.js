@@ -10,4 +10,10 @@ router.get("/", async (req, res) => {
   res.send(image);
 });
 
+router.post("/create", async (req, res) => {
+  const service = new ImageService();
+  const image = await service.createImage(req.body);
+  res.send(image._id);
+});
+
 export default router;

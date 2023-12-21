@@ -104,7 +104,6 @@ export class Service {
   async verifyCaptcha() {
     const token = sessionStorage.getItem("captchaToken");
     sessionStorage.removeItem("captchaToken");
-    
     const response = await fetch("/verify-captcha", {
       method: "POST",
       headers: {
@@ -133,5 +132,89 @@ export class Service {
 
   clusterMarkers() {
     this.map.setCluster();
+  }
+
+  async saveImgs(files) {
+    var res = [];
+    const imgs = Array.from(files);
+
+    for await (const file of imgs) {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async function () {
+        const response = await fetch("http://localhost:3456/image/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url: reader.result,
+            caption: file.name,
+            createAt: new Date(),
+          }),
+        });
+
+        const id = await response.json();
+        console.log(id);
+        res.push(id);
+      };
+    }
+
+    return res;
+  }
+
+  catchUserSubmitReport() {
+    const typeInput = document.getElementById("type");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const contentInput = document.getElementById("content");
+    const imgsInput = document.getElementById("formFileMultiple");
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    imgsInput.addEventListener("change", function (e) {
+      const files = e.currentTarget.files;
+
+      if (files.length > 2) {
+        imgsInput.classList.add("is-invalid");
+        submitBtn.setAttribute("disabled", "");
+      } else {
+        imgsInput.classList.contains("is-invalid") &&
+          imgsInput.classList.remove("is-invalid");
+        submitBtn.removeAttribute("disabled");
+      }
+    });
+
+    const tmpThis = this;
+
+    document
+      .querySelector("form#reportForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const files = document.querySelector("input#formFileMultiple").files;
+        const imgs = await tmpThis.saveImgs(files);
+
+        console.log(imgs);
+
+        const response = await fetch("http://localhost:3456/report/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            typeReport: typeInput.value,
+            email: emailInput.value,
+            name: nameInput.value,
+            phone: phoneInput.value,
+            content: contentInput.value,
+            imgs: imgs,
+            type: "issued",
+          }),
+        });
+
+        const outcome = await response.json();
+        console.log(outcome);
+      });
   }
 }

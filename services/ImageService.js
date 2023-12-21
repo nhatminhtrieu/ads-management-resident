@@ -13,4 +13,13 @@ export default class ImageService {
       console.log("ImageService.getImageById", err);
     }
   }
+
+  async createImage(data) {
+    try {
+      const image = await this.repository.createImage(data);
+      return image;
+    } catch (err) {
+      console.log("ImageService.createImage", err);
+    }
+  }
 }

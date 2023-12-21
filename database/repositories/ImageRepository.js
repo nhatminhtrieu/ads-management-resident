@@ -11,7 +11,7 @@ class ImageRepository {
       await image.save();
       return image;
     } catch (err) {
-      console.err("createImage", err);
+      console.log("createImage", err);
       throw err;
     }
   }

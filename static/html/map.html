@@ -113,14 +113,21 @@
               </button>
             </div>
             <div class="modal-body">
-              <form class="row g-3" method="post" enctype="multipart/form-data">
+              <form
+                class="row g-3"
+                method="post"
+                enctype="multipart/form-data"
+                id="reportForm"
+              >
                 <div class="mb-3">
                   <label for="type" class="form-label">Hình thức báo cáo</label>
-                  <select class="form-select" aria-label="type">
-                    <option value="tgsp" selected>Tố giác sai phạm</option>
-                    <option value="dknd">Đăng ký nội dung</option>
-                    <option value="dgyk">Đóng góp ý kiến</option>
-                    <option value="gdtc">Giải đáp thắc mắc</option>
+                  <select class="form-select" aria-label="type" id="type">
+                    <option value="Tố giác sai phạm" selected>
+                      Tố giác sai phạm
+                    </option>
+                    <option value="Đăng ký nội dung">Đăng ký nội dung</option>
+                    <option value="Đóng góp ý kiến">Đóng góp ý kiến</option>
+                    <option value="Giải đáp thắc mắc">Giải đáp thắc mắc</option>
                   </select>
                 </div>
                 <div class="mb-3">
@@ -128,7 +135,6 @@
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Nguyễn Văn A"
                     aria-label="name"
                     id="name"
                   />
@@ -166,7 +172,9 @@
                     aria-describedby="fileHelp"
                     accept="image/*"
                   />
-                  <div id="fileHelp" class="form-text">Tối đa 02 hình.</div>
+                  <div id="fileHelp" class="invalid-feedback">
+                    Tối đa 02 hình.
+                  </div>
                 </div>
               </form>
             </div>
@@ -178,7 +186,9 @@
               >
                 Bỏ qua
               </button>
-              <button type="submit" class="btn btn-primary">Lưu</button>
+              <button type="submit" class="btn btn-primary" form="reportForm">
+                Lưu
+              </button>
             </div>
           </div>
         </div>

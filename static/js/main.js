@@ -17,6 +17,7 @@ async function main() {
   await loadMarker(map);
   service.clusterMarkers();
   service.catchUserSelectedLocation();
+  service.catchUserSubmitReport();
 }
 
 main();
