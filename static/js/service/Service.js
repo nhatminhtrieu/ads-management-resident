@@ -71,6 +71,10 @@ export class Service {
           )
         : this.map.cluster.clearMarkers();
     });
+
+    toggleReports.addEventListener("change", (event) => {
+      this.map.setReportOnAll(event.target.checked ? this.map.map : null);
+    });
   }
 
   handleLocationError(browserHasGeolocation, infoWindow, pos, map) {
@@ -127,6 +131,8 @@ export class Service {
       );
       this.map.sideBar.setContent(1, this.map.banners.root);
       this.map.sideBar.show();
+
+      this.catchUserSubmitReport(event.latLng);
     });
   }
 
@@ -165,27 +171,21 @@ export class Service {
     return fileIds;
   }
 
-  catchUserSubmitReport() {
+  catchUserClickMarker() {
+    this.map.marker.forEach((marker) => {
+      marker.addListener("click", () => {
+        this.catchUserSubmitReport(marker.getPosition(), marker.getAdsId());
+      });
+    });
+  }
+
+  catchUserSubmitReport(pos, adsId = "") {
     const typeInput = document.getElementById("type");
     const nameInput = document.getElementById("name");
     const emailInput = document.getElementById("email");
     const phoneInput = document.getElementById("phone");
     const contentInput = document.getElementById("content");
-    const imgsInput = document.getElementById("formFileMultiple");
     const submitBtn = document.querySelector('button[type="submit"]');
-
-    imgsInput.addEventListener("change", function (e) {
-      const files = e.currentTarget.files;
-
-      if (files.length > 2) {
-        imgsInput.classList.add("is-invalid");
-        submitBtn.setAttribute("disabled", "");
-      } else {
-        imgsInput.classList.contains("is-invalid") &&
-          imgsInput.classList.remove("is-invalid");
-        submitBtn.removeAttribute("disabled");
-      }
-    });
 
     const tmpThis = this;
 
@@ -196,6 +196,12 @@ export class Service {
 
         const files = document.querySelector("input#formFileMultiple").files;
         const imgsId = await tmpThis.saveImgs(Array.from(files));
+        const content =
+          "<div class='card' style='width: 18rem;padding:0; border:none'>" +
+          `<h5 class="card-title">${typeInput.value}</h5>` +
+          `<p class="card-text">${emailInput.value}</p>` +
+          `<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
+          "</div>";
 
         const response = await fetch("http://localhost:3456/report/create", {
           method: "POST",
@@ -203,6 +209,8 @@ export class Service {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            id: adsId || null,
+            coordinate: pos,
             typeReport: typeInput.value,
             email: emailInput.value,
             name: nameInput.value,
@@ -214,7 +222,88 @@ export class Service {
         });
 
         const outcome = await response.json();
-        console.log(outcome);
+        tmpThis.map.pushReportMarker(outcome, "", content);
       });
+  }
+
+  resetFormFields() {
+    document
+      .querySelector("#reportModal")
+      .addEventListener("hidden.bs.modal", () => {
+        document.querySelector("form").reset();
+        document
+          .querySelector('button[type="submit"]')
+          .setAttribute("disabled", "");
+      });
+  }
+
+  checkValid() {
+    const typeInput = document.getElementById("type");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const imgsInput = document.getElementById("formFileMultiple");
+
+    if (
+      typeInput.value &&
+      nameInput.value &&
+      emailInput.value &&
+      phoneInput.value &&
+      !imgsInput.classList.contains("is-invalid") &&
+      imgsInput.files.length
+    )
+      return true;
+    return false;
+  }
+
+  validateForm() {
+    const imgsInput = document.getElementById("formFileMultiple");
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const tmpThis = this;
+
+    imgsInput.addEventListener("change", function (e) {
+      const files = e.currentTarget.files;
+
+      if (files.length > 2) {
+        imgsInput.classList.add("is-invalid");
+        submitBtn.setAttribute("disabled", "");
+      } else {
+        imgsInput.classList.contains("is-invalid") &&
+          imgsInput.classList.remove("is-invalid");
+
+        tmpThis.checkValid() && submitBtn.removeAttribute("disabled");
+      }
+    });
+
+    document.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("change", () => {
+        tmpThis.checkValid() && submitBtn.removeAttribute("disabled");
+      });
+    });
+  }
+
+  async loadReportMarkers() {
+    const tmpThis = this;
+    try {
+      const response = await fetch("http://localhost:3456/report/");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const list = await response.json();
+      for await (const report of list) {
+        const contentString =
+          "<div class='card' style='width: 18rem;padding:0; border:none'>" +
+          `<h5 class="card-title">${report.typeReport}</h5>` +
+          `<p class="card-text">${report.email}</p>` +
+          `<p class="card-text" style='font-weight:bold; font-style: italic'>${
+            report.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ"
+          }</p>` +
+          "</div>";
+
+        tmpThis.map.pushReportMarker(report, "", contentString);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

@@ -17,6 +17,7 @@ export default class ReportService {
   async getAllReports() {
     try {
       const reports = await this.repository.getAllReports();
+      return reports;
     } catch (err) {
       console.log("ReportService.getAllReports", err);
     }

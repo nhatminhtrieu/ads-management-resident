@@ -4,6 +4,9 @@ const ReportSchema = new Schema(
   {
     id: {
       type: Schema.Types.ObjectId,
+    },
+    coordinate: {
+      type: Object,
       required: true,
     },
     typeReport: {

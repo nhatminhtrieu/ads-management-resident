@@ -120,7 +120,10 @@
                 id="reportForm"
               >
                 <div class="mb-3">
-                  <label for="type" class="form-label">Hình thức báo cáo</label>
+                  <label for="type" class="form-label"
+                    >Hình thức báo cáo
+                    <span style="font-weight: bold; color: red">*</span></label
+                  >
                   <select class="form-select" aria-label="type" id="type">
                     <option value="Tố giác sai phạm" selected>
                       Tố giác sai phạm
@@ -131,25 +134,41 @@
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="name" class="form-label">Họ và tên</label>
+                  <label for="name" class="form-label"
+                    >Họ và tên
+                    <span style="font-weight: bold; color: red">*</span></label
+                  >
                   <input
                     type="text"
                     class="form-control"
                     aria-label="name"
                     id="name"
+                    required
                   />
                 </div>
                 <div class="col-md-6">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" />
+                  <label for="email" class="form-label"
+                    >Email
+                    <span style="font-weight: bold; color: red">*</span></label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                  />
                 </div>
                 <div class="col-md-6">
-                  <label for="phone" class="form-label">Số điện thoại</label>
-                  <input type="tel" class="form-control" id="phone" />
+                  <label for="phone" class="form-label"
+                    >Số điện thoại
+                    <span style="font-weight: bold; color: red">*</span></label
+                  >
+                  <input type="tel" class="form-control" id="phone" required />
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label"
-                    >Nội dung báo cáo</label
+                    >Nội dung báo cáo
+                    <span style="font-weight: bold; color: red">*</span></label
                   >
                   <!-- Embed the HTMEditor -->
                   <textarea id="content"></textarea>
@@ -162,7 +181,8 @@
                 </div>
                 <div class="mb-3">
                   <label for="formFileMultiple" class="form-label"
-                    >Hình ảnh minh họa</label
+                    >Hình ảnh minh họa
+                    <span style="font-weight: bold; color: red">*</span></label
                   >
                   <input
                     class="form-control"
@@ -171,6 +191,7 @@
                     multiple
                     aria-describedby="fileHelp"
                     accept="image/*"
+                    required
                   />
                   <div id="fileHelp" class="invalid-feedback">
                     Tối đa 02 hình.
@@ -186,7 +207,13 @@
               >
                 Bỏ qua
               </button>
-              <button type="submit" class="btn btn-primary" form="reportForm">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                form="reportForm"
+                data-bs-dismiss="modal"
+                disabled
+              >
                 Lưu
               </button>
             </div>

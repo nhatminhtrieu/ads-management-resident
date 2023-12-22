@@ -26,17 +26,35 @@ export default class CustomMarker {
       glyphColor: "#ffffff",
       scale: 1.5,
     },
+    issued: {
+      glyph: (() => {
+        const glyImg = document.createElement("img");
+        glyImg.src = "../../static/assets/IssuedIcon.svg";
+        return glyImg;
+      })(),
+      scale: 0,
+    },
+    resolved: {
+      glyph: (() => {
+        const glyImg = document.createElement("img");
+        glyImg.src = "../../static/assets/ResolvedIcon.svg";
+        return glyImg;
+      })(),
+      scale: 0,
+    },
   };
   #position = {};
   #title = "";
   #type = "";
+  #id = "";
 
-  constructor(map, position, title, type = "zoning") {
+  constructor(map, position, title, type = "zoning", id = "") {
     this.map = map;
     this.marker = null;
     this.#position = position;
     this.#title = title;
     this.#type = type;
+    this.#id = id;
   }
 
   async init() {
@@ -61,5 +79,13 @@ export default class CustomMarker {
 
   setPosition(position) {
     this.marker.position = position;
+  }
+
+  getPosition() {
+    return this.#position;
+  }
+
+  getAdsId() {
+    return this.#id;
   }
 }

@@ -180,7 +180,7 @@ class Banners {
 
     const img = document.createElement("img");
     img.style = `width: 400px; height: 300px; object-fit: cover;`;
-    fetch(`http://localhost:3456/images?id=${ad.imgs[0]}`)
+    fetch(`http://localhost:3456/image?id=${ad.imgs[0]}`)
       .then((response) => {
         return response.json();
       })
@@ -221,6 +221,62 @@ class Banners {
           ].style = `display: flex !important; flex-direction: column; align-items: center; gap: 20px;`;
         });
       });
+  }
+
+  createCardForReport(report) {
+    const card = document.createElement("div");
+    card.classList.add("card", "card-body");
+    const title = document.createElement("h5");
+    title.classList.add("card-title");
+    title.innerText = report.typeReport;
+
+    const list = document.createElement("ul");
+    list.innerHTML = `<li>Email: <em>${report.email}</em></li>\
+      <li>Họ và tên: <em>${report.name}</em></li>\
+      <li>Số điện thoại: <em>${report.phone}</em></li>\
+      <li>Nội dung báo cáo: ${report.content}</li>\
+    `;
+
+    card.appendChild(title);
+    card.append(list);
+
+    report.imgs.forEach((imgId) => {
+      const img = document.createElement("img");
+      img.style = `padding-bottom: "20px"`;
+      fetch(`http://localhost:3456/image?id=${imgId}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((image) => {
+          img.setAttribute("src", image.url);
+        })
+        .catch((error) => {
+          img.setAttribute(
+            "src",
+            "https://images.unsplash.com/photo-1553096442-8fe2118fb927?ixid=M3w1NDE3MjR8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTcwMjc0NjU0MHww&ixlib=rb-4.0.3"
+          );
+        });
+
+      card.append(img);
+    });
+
+    const status = document.createElement("p");
+    status.classList.add("card-text");
+    status.style = "font-weight:bold; font-style: italic";
+    status.innerText = report.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
+
+    card.append(status);
+
+    return card;
+  }
+
+  setBannersForReport(report) {
+    this.cardList.innerHTML = "";
+
+    const card = this.createCardForReport(report);
+    this.cardList.appendChild(card);
+    this.root.innerHTML = "";
+    this.root.appendChild(this.cardList);
   }
 }
 

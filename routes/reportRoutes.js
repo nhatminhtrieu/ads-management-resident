@@ -4,11 +4,9 @@ import ReportService from "../services/ReportService.js";
 const router = express.Router();
 
 router.post("/create", async (req, res) => {
-  console.log(req.body);
-
-  //   const service = new ReportService();
-  //   const report = await service.createReport(req.body);
-  //   res.send(report);
+  const service = new ReportService();
+  const report = await service.createReport(req.body);
+  res.send(report);
 });
 
 router.get("/", async (req, res) => {
