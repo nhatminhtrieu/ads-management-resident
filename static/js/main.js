@@ -1,7 +1,7 @@
 import { IMap } from "./map/Map.js";
 import { Service } from "./service/Service.js";
 import loadMarker from "./map/loadMarker.js";
-import SideBar from "./service/SideBar.js";
+import Form from "./service/Form.js";
 
 // toggle is false means the side bar is being hidden
 var toggle = false;
@@ -16,10 +16,11 @@ async function main() {
   service.preloadCaptcha();
   await loadMarker(map);
   service.clusterMarkers();
-  service.catchUserSelectedLocation();
-  service.catchUserClickMarker();
-  service.resetFormFields();
-  service.validateForm();
+
+  const form = new Form(map);
+  service.catchUserSelectedLocation(form);
+  service.catchUserClickMarker(form);
+  form.catchUserSubmitReport();
   await service.loadReportMarkers();
 }
 
