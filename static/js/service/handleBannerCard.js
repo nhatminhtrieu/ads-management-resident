@@ -196,7 +196,10 @@ class Banners {
 
     const exp = new Date(ad.exp);
     const date = document.createElement("div");
-    date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toUTCString()}`;
+    date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toLocaleString(
+      "en-GB",
+      { timeZone: "UTC" }
+    )} GMT`;
 
     wrap.appendChild(img);
     wrap.appendChild(date);
@@ -215,7 +218,6 @@ class Banners {
           contents.forEach(
             (content) => (content.style = `display: none !important;`)
           );
-          console.log(contents[id]);
           contents[
             id
           ].style = `display: flex !important; flex-direction: column; align-items: center; gap: 20px;`;
