@@ -15,18 +15,33 @@ async function main() {
   await loadMarker(map);
   service.clusterMarkers();
   service.catchUserSelectedLocation();
-  service.preloadCaptcha();
-  const toggleButton = document.getElementById("collapse-btn");
-  toggleButton.onclick = () => {
-    if (toggle) {
-      map.banners.hideSidebar();
-      toggleButton.innerHTML = '<i class="bi bi-caret-right-fill"></i>';
-    } else {
-      map.banners.showSidebar();
-      toggleButton.innerHTML = '<i class="bi bi-caret-left-fill"></i>';
-    }
-    toggle = !toggle;
-  };
+  // localStorage.setItem("name", "GeeksforGeeks");
+  // localStorage.setItem("color", "green");
+
+  // // Updating data
+  // localStorage.setItem("name", "GeeksforGeeks(GfG)");
+  // localStorage.setItem("color", "Blue");
+
+  // // Get the data by key
+  // let name = localStorage.getItem("name");
+  // console.log("This is - ", name);
+  // let color = localStorage.getItem("color");
+  // console.log("Value of color is - ", color);
+
+  // // Get key on a given position
+  // let key1 = localStorage.key(1);
+  // console.log(key1);
+
+  // // Get number of stored items
+  // let items = localStorage.length;
+  // console.log("Total number of items is ", items);
+
+  // // Remove key with its value
+  // localStorage.removeItem("color");
+  // localStorage.setItem("idReport", JSON.stringify([1, 2]));
+  console.log(localStorage);
+  // const idReport = localStorage.getItem("idReport");
+  // console.log(JSON.parse(idReport));
 }
 
 main();
