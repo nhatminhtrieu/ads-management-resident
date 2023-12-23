@@ -84,29 +84,37 @@ export class Service {
   }
 
   preloadCaptcha() {
-    window.onload = function () {
+    // Use <div id="captcha"></div> to render captcha
+    window.onload = () => {
       // Check if captcha element exists
       const captchaElement = document.querySelector("#captcha");
       if (captchaElement) {
-        // Use <div id="captcha"></div> to render captcha
         turnstile.render("#captcha", {
           sitekey: "0x4AAAAAAAOLF5GT_0tyAUJJ",
           theme: "auto",
-          callback: async (token) => {
-            // Verify captcha here
-            const response = await fetch("/verify-captcha", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ token: token }),
-            });
-            const outcome = await response.json();
-            console.log(outcome);
+          callback: (token) => {
+            // Store token to session storage
+            sessionStorage.setItem("captchaToken", token);
           },
         });
       }
     };
+  }
+
+  async verifyCaptcha() {
+    const token = sessionStorage.getItem("captchaToken");
+    sessionStorage.removeItem("captchaToken");
+    
+    const response = await fetch("/verify-captcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: token }),
+    });
+
+    const outcome = await response.json();
+    console.log(outcome);
   }
 
   catchUserSelectedLocation() {
@@ -118,6 +126,8 @@ export class Service {
       this.map.banners.setBannersForUserSelection(
         await this.map.getDetailsFromCoordinate(event.latLng)
       );
+      this.map.sideBar.setContent(1, this.map.banners.root);
+      this.map.sideBar.show();
     });
   }
 
