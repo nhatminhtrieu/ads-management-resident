@@ -1,5 +1,6 @@
 export default class Form {
   constructor(map) {
+    this.modal = document.querySelector("#reportModal");
     this.form = document.querySelector("form#reportForm");
     this.typeInput = document.getElementById("type");
     this.nameInput = document.getElementById("name");
@@ -92,20 +93,19 @@ export default class Form {
   }
 
   resetFormFields() {
-    document
-      .querySelector("#reportModal")
-      .addEventListener("hidden.bs.modal", () => {
-        this.form.reset();
-        this.submitBtn.setAttribute("disabled", "");
-      });
+    this.modal.addEventListener("hidden.bs.modal", () => {
+      this.form.reset();
+      this.submitBtn.setAttribute("disabled", "");
+    });
   }
 
   checkValid() {
     if (
-      this.typeInput.value &&
-      this.nameInput.value &&
-      this.emailInput.value &&
-      this.phoneInput.value &&
+      this.typeInput.value !== "" &&
+      this.nameInput.value !== "" &&
+      this.emailInput.value !== "" &&
+      this.phoneInput.value !== "" &&
+      tinymce.get("content").getContent() !== "" &&
       !this.imgsInput.classList.contains("is-invalid") &&
       this.imgsInput.files.length
     )
@@ -113,11 +113,11 @@ export default class Form {
     return false;
   }
 
-  validateFile(files) {
-    files.forEach((file) => {
+  async validateFile(files) {
+    for await (const file of files) {
       const size = file.size / 1024 / 1024;
       if (size > 10) return false;
-    });
+    }
     return true;
   }
 
@@ -142,22 +142,33 @@ export default class Form {
     this.imgsInput.addEventListener("change", async function (e) {
       const files = e.currentTarget.files;
 
-      if (tmpThis.validateFile(Array.from(files)) && files.length > 2) {
+      const validateImgs = await tmpThis.validateFile(Array.from(files));
+
+      if (!validateImgs || files.length > 2) {
         tmpThis.imgsInput.classList.add("is-invalid");
         tmpThis.submitBtn.setAttribute("disabled", "");
       } else {
         tmpThis.imgsInput.classList.contains("is-invalid") &&
           tmpThis.imgsInput.classList.remove("is-invalid");
 
-        tmpThis.checkValid() &&
-          (await tmpThis.verifyCaptcha()) &&
-          tmpThis.submitBtn.removeAttribute("disabled");
+        tmpThis.checkValid()
+          ? (await tmpThis.verifyCaptcha()) &&
+            tmpThis.submitBtn.removeAttribute("disabled")
+          : tmpThis.submitBtn.setAttribute("disabled", "");
       }
+    });
+
+    tinymce.activeEditor.on("keypress keyup", () => {
+      tmpThis.checkValid()
+        ? tmpThis.submitBtn.removeAttribute("disabled")
+        : tmpThis.submitBtn.setAttribute("disabled", "");
     });
 
     document.querySelectorAll("input").forEach((input) => {
       input.addEventListener("change", () => {
-        tmpThis.checkValid() && tmpThis.submitBtn.removeAttribute("disabled");
+        tmpThis.checkValid()
+          ? tmpThis.submitBtn.removeAttribute("disabled")
+          : tmpThis.submitBtn.setAttribute("disabled", "");
       });
     });
   }
