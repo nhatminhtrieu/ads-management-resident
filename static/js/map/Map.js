@@ -201,12 +201,12 @@ export class IMap {
     this.cluster.clearMarkers();
   }
 
-  async pushReportMarker(report, title, content = title, issued = true) {
+  async pushReportMarker(report, title, content = title) {
     const marker = new CustomMarker(
       this.map,
       report.coordinate,
       title,
-      issued ? "issued" : "resolved"
+      report.type
     );
     await marker.init();
 
