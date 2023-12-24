@@ -105,6 +105,21 @@ export class Service {
     };
   }
 
+  async verifyCaptcha() {
+    const token = sessionStorage.getItem("captchaToken");
+    sessionStorage.removeItem("captchaToken");
+    const response = await fetch("/verify-captcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: token }),
+    });
+
+    const outcome = await response.json();
+    return outcome.success;
+  }
+
   catchUserSelectedLocation(form) {
     this.map.map.addListener("click", async (event) => {
       // This modified func will allow to show only one userSelectedMarker

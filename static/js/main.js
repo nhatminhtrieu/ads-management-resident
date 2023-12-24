@@ -15,13 +15,16 @@ async function main() {
   service.showAllMarker();
   service.preloadCaptcha();
   await loadMarker(map);
+  await service.loadReportMarkers();
   service.clusterMarkers();
 
   const form = new Form(map);
   service.catchUserSelectedLocation(form);
   service.catchUserClickMarker(form);
+  form.resetFormFields();
+  const captcha = await service.verifyCaptcha();
+  form.setCaptcha(captcha);
   form.catchUserSubmitReport();
-  await service.loadReportMarkers();
 }
 
 main();

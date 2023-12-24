@@ -12,6 +12,7 @@ export default class Form {
     this.map = map;
     this.pos = {};
     this.adsId = "";
+    this.captcha = false;
   }
 
   setPosition(coordinate) {
@@ -20,6 +21,10 @@ export default class Form {
 
   setAdsId(id) {
     this.adsId = id;
+  }
+
+  setCaptcha(verify) {
+    this.captcha = verify;
   }
 
   async saveImgs(files) {
@@ -54,7 +59,6 @@ export default class Form {
   }
 
   catchUserSubmitReport() {
-    this.resetFormFields();
     this.validateForm();
 
     this.form.addEventListener("submit", async (event) => {
@@ -93,7 +97,7 @@ export default class Form {
   }
 
   resetFormFields() {
-    this.modal.addEventListener("hidden.bs.modal", () => {
+    this.modal.addEventListener("show.bs.modal", () => {
       this.form.reset();
       this.submitBtn.setAttribute("disabled", "");
     });
@@ -113,36 +117,21 @@ export default class Form {
     return false;
   }
 
-  async validateFile(files) {
-    for await (const file of files) {
+  validateFile(files) {
+    for (const file of files) {
       const size = file.size / 1024 / 1024;
       if (size > 10) return false;
     }
     return true;
   }
 
-  async verifyCaptcha() {
-    const token = sessionStorage.getItem("captchaToken");
-    sessionStorage.removeItem("captchaToken");
-    const response = await fetch("/verify-captcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: token }),
-    });
-
-    const outcome = await response.json();
-    return outcome.success;
-  }
-
   validateForm() {
     const tmpThis = this;
 
-    this.imgsInput.addEventListener("change", async function (e) {
+    this.imgsInput.addEventListener("change", function (e) {
       const files = e.currentTarget.files;
 
-      const validateImgs = await tmpThis.validateFile(Array.from(files));
+      const validateImgs = tmpThis.validateFile(Array.from(files));
 
       if (!validateImgs || files.length > 2) {
         tmpThis.imgsInput.classList.add("is-invalid");
@@ -152,8 +141,7 @@ export default class Form {
           tmpThis.imgsInput.classList.remove("is-invalid");
 
         tmpThis.checkValid()
-          ? (await tmpThis.verifyCaptcha()) &&
-            tmpThis.submitBtn.removeAttribute("disabled")
+          ? tmpThis.captcha && tmpThis.submitBtn.removeAttribute("disabled")
           : tmpThis.submitBtn.setAttribute("disabled", "");
       }
     });
