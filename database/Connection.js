@@ -1,8 +1,6 @@
 import { connect } from "mongoose";
 import { config } from "dotenv";
 import mongoose from "mongoose";
-import Image from "./models/Image.js";
-import Advertisement from "./models/Advertisement.js";
 
 config();
 export default async () => {

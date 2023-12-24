@@ -12,6 +12,7 @@ export class IMap {
     this.sideBar = new SideBar();
     this.banners = new Banners();
     this.cluster = null;
+    this.reportMarkers = [];
   }
 
   async initMap() {
@@ -91,12 +92,13 @@ export class IMap {
     return pos;
   }
 
-  async pushCustomMarker(position, title, content = title, zoning = true) {
+  async pushCustomMarker(position, title, content = title, zoning = true, id) {
     const marker = new CustomMarker(
       this.map,
       position,
       title,
-      zoning ? "zoning" : "not_zoning"
+      zoning ? "zoning" : "not_zoning",
+      id
     );
     await marker.init();
 
@@ -149,6 +151,10 @@ export class IMap {
     this.marker.forEach((marker) => marker.setMap(map));
   }
 
+  setReportOnAll(map) {
+    this.reportMarkers.forEach((marker) => marker.setMap(map));
+  }
+
   async getPlacesID(latlng) {
     const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject) => {
@@ -193,5 +199,32 @@ export class IMap {
 
   removeCluster() {
     this.cluster.clearMarkers();
+  }
+
+  async pushReportMarker(report, title, content = title) {
+    const marker = new CustomMarker(
+      this.map,
+      report.coordinate,
+      title,
+      report.type
+    );
+    await marker.init();
+
+    marker.addListener("click", () => {
+      // Update and open info window
+      this.infoWindow.setContent(content);
+      this.infoWindow.open({
+        anchor: marker.marker,
+        map: this.map,
+      });
+
+      // Update side bar
+      const reportBanner = new Banners();
+      reportBanner.setBannersForReport(report);
+      this.sideBar.setContent(2, reportBanner.root);
+      this.sideBar.show();
+      this.userSelectedMarker && this.userSelectedMarker.setMap(null);
+    });
+    this.reportMarkers.push(marker);
   }
 }

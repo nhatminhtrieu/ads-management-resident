@@ -1,15 +1,26 @@
 import { Schema, model } from "mongoose";
-import Image from "models/Image";
 
 const ReportSchema = new Schema(
   {
     id: {
       type: Schema.Types.ObjectId,
+    },
+    coordinate: {
+      type: Object,
+      required: true,
+    },
+    typeReport: {
+      type: String,
+      enum: [
+        "Tố giác sai phạm",
+        "Đăng ký nội dung",
+        "Đóng góp ý kiến",
+        "Giải đáp thắc mắc",
+      ],
       required: true,
     },
     email: {
       type: String,
-      enum: ["example1@example.com", "example2@example.com"], // Add your desired email options here
       required: true,
     },
     name: {
@@ -24,10 +35,13 @@ const ReportSchema = new Schema(
       type: String,
       required: true,
     },
-    imgs: {
-      type: [Image],
-      required: true,
-    },
+    imgs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Image",
+        required: true,
+      },
+    ],
     type: {
       type: String,
       enum: ["issued", "resolved"],

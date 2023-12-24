@@ -71,6 +71,10 @@ export class Service {
           )
         : this.map.cluster.clearMarkers();
     });
+
+    toggleReports.addEventListener("change", (event) => {
+      this.map.setReportOnAll(event.target.checked ? this.map.map : null);
+    });
   }
 
   handleLocationError(browserHasGeolocation, infoWindow, pos, map) {
@@ -104,7 +108,6 @@ export class Service {
   async verifyCaptcha() {
     const token = sessionStorage.getItem("captchaToken");
     sessionStorage.removeItem("captchaToken");
-    
     const response = await fetch("/verify-captcha", {
       method: "POST",
       headers: {
@@ -114,10 +117,10 @@ export class Service {
     });
 
     const outcome = await response.json();
-    console.log(outcome);
+    return outcome.success;
   }
 
-  catchUserSelectedLocation() {
+  catchUserSelectedLocation(form) {
     this.map.map.addListener("click", async (event) => {
       // This modified func will allow to show only one userSelectedMarker
       this.map.updateSelectedMarker(event.latLng, "Vị trí bạn chọn");
@@ -128,10 +131,47 @@ export class Service {
       );
       this.map.sideBar.setContent(1, this.map.banners.root);
       this.map.sideBar.show();
+
+      form.setPosition(event.latLng);
+      form.setAdsId("");
     });
   }
 
   clusterMarkers() {
     this.map.setCluster();
+  }
+
+  catchUserClickMarker(form) {
+    this.map.marker.forEach((marker) => {
+      marker.addListener("click", () => {
+        form.setPosition(marker.getPosition());
+        form.setAdsId(marker.getAdsId());
+      });
+    });
+  }
+
+  async loadReportMarkers() {
+    const tmpThis = this;
+    try {
+      const response = await fetch("http://localhost:3456/report/");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const list = await response.json();
+      for await (const report of list) {
+        const contentString =
+          "<div class='card' style='width: 18rem;padding:0; border:none'>" +
+          `<h5 class="card-title">${report.typeReport}</h5>` +
+          `<p class="card-text">${report.email}</p>` +
+          `<p class="card-text" style='font-weight:bold; font-style: italic'>${
+            report.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ"
+          }</p>` +
+          "</div>";
+
+        tmpThis.map.pushReportMarker(report, "", contentString);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

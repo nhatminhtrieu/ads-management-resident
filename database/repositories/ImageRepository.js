@@ -1,8 +1,8 @@
-const Image = require("../models/Image");
+import ImageModel from "../models/Image.js";
 
 class ImageRepository {
   constructor() {
-    this.model = Image;
+    this.model = ImageModel;
   }
 
   async createImage(data) {
@@ -11,7 +11,7 @@ class ImageRepository {
       await image.save();
       return image;
     } catch (err) {
-      console.err("createImage", err);
+      console.log("createImage", err);
       throw err;
     }
   }
@@ -53,4 +53,4 @@ class ImageRepository {
   }
 }
 
-module.exports = ImageRepository;
+export default ImageRepository;

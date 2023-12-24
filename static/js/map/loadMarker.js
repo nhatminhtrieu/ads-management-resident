@@ -21,8 +21,13 @@ export default async function loadMarker(map) {
     const list = await response.json();
     for await (const ad of list) {
       const contentString = createContent(ad);
-      // map.pushMarker(ad.coordinate, ad.title, "ad", contentString);
-      map.pushCustomMarker(ad.coordinate, ad.title, contentString, ad.zoning);
+      map.pushCustomMarker(
+        ad.coordinate,
+        ad.title,
+        contentString,
+        ad.zoning,
+        ad._id
+      );
     }
   } catch (error) {
     console.error(error);
