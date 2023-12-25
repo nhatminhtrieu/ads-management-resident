@@ -11,6 +11,9 @@ async function main() {
 
   const service = new Service(map);
 
+  const sideBar = new SideBar();
+  sideBar.init(map);
+
   service.moveToCurrentLocation();
   service.showAllMarker();
   service.preloadCaptcha();

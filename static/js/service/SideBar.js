@@ -15,10 +15,26 @@ export default class SideBar {
     font-size: x-large;
     color: gray;
     align-items: center;`;
+
+
+    this.searchButton = document.querySelector('.bi-search');
+    this.searchBoxElement = document.createElement('input');
+    this.searchBoxElement.setAttribute('type', 'text');
+    this.searchBoxElement.setAttribute('placeholder', 'Enter an address...');
+
+    this.searchBoxElement.style = `
+    width: 50px; /* initial width */
+    height: 30px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: small;
+    transition: width 0.5s cubic-bezier(.5,1.3,.8,1.1), transform 0.3s; /* transition effect */`;
+
     this.defaultContent.innerHTML = "Chưa có thông tin";
   }
 
-  init() {
+  init(map) {
     this.tabs[this.active].classList.add("tab-active");
     this.tabs.forEach((tab, id) => {
       this.contents.push(this.defaultContent);
@@ -29,7 +45,39 @@ export default class SideBar {
     this.description.innerHTML = "";
     this.description.appendChild(this.contents[this.active]);
     this.button.onclick = () => this.toggleVisible();
+    this.searchBox = new google.maps.places.SearchBox(this.searchBoxElement);
+    this.geoCoder = new google.maps.Geocoder();
+    this.searchButton.addEventListener('click', () => {
+      this.setContent(0, this.searchBoxElement);
+      this.searchBox.addListener("places_changed", () => {
+        const places = this.searchBox.getPlaces();
+        if (places.length == 0) return;
+        places.forEach(place => {
+          if (!place.geometry || !place.geometry.location) return;
+          this.geoCoder.geocode({ 'address': place.formatted_address }, async (results, status) => {
+            if (status == 'OK') {
+              const latLng = results[0].geometry.location;
+              map.map.setCenter(latLng);
+              map.updateSelectedMarker(latLng, place.formatted_address);
+
+              // Update banner for the selected place
+              map.banners.setBannersForUserSelection(
+                await map.getDetailsFromCoordinate(latLng)
+              );
+              map.sideBar.setContent(1, map.banners.root);
+              map.sideBar.show();
+
+              return latLng;
+            } else {
+              console.log('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        });
+      });
+    });
   }
+
+
 
   changeActive(index) {
     this.tabs[this.active].classList.remove("tab-active");
@@ -70,5 +118,9 @@ export default class SideBar {
   setContent(index, content) {
     this.contents[index] = content;
     this.changeActive(index);
+  }
+
+  showCard(cardElement) {
+    this.root.appendChild(cardElement);
   }
 }
