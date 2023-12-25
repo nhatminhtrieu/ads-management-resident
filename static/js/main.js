@@ -2,6 +2,7 @@ import { IMap } from "./map/Map.js";
 import { Service } from "./service/Service.js";
 import loadMarker from "./map/loadMarker.js";
 import Form from "./service/Form.js";
+import SideBar from "./service/SideBar.js";
 
 // toggle is false means the side bar is being hidden
 var toggle = false;
