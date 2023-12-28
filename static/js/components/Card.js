@@ -1,3 +1,4 @@
+import Form from "./Form.js";
 const DATABASE = "http://localhost:3456";
 
 class Card {
@@ -10,6 +11,8 @@ class Card {
 
 	constructor(info, type = "ads") {
 		this.root = this.#map[type](info);
+		this.info = info;
+		this.handleClick = () => {};
 	}
 
 	#createAds(info) {
@@ -25,10 +28,10 @@ class Card {
 
 		const list = document.createElement("ul");
 		list.innerHTML = `<li>Kích thước: <em>${info.size}</em></li>\
-      <li>Số lượng: <em>${info.number}</em></li>\
-      <li>Hình thức: <em>${info.typeAds}</em></li>\
-      <li>Phân loại: <em>${info.typeLoc}</em</li>\
-    `;
+		<li>Số lượng: <em>${info.number}</em></li>\
+		<li>Hình thức: <em>${info.typeAds}</em></li>\
+		<li>Phân loại: <em>${info.typeLoc}</em</li>\
+		`;
 
 		const row = document.createElement("div");
 		row.classList.add("btn-row");
@@ -36,10 +39,20 @@ class Card {
 			'<button type="button" class="btn btn-icon" id="info" data-bs-toggle="modal" data-bs-target="#infoModal">\
         <i class="bi bi-info-circle"></i>\
         </button>\
-        <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">\
-        <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm\
-        </button>\
-    ';
+   `	 ';
+
+		const button = document.createElement("button");
+		button.classList.add("btn", "btn-outline-danger");
+		button.id = "report";
+		button.setAttribute("data-bs-toggle", "modal");
+		button.setAttribute("data-bs-target", "#reportModal");
+		button.innerHTML = `<i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm`;
+		button.onclick = () => {
+			console.log(info);
+			document.getElementById("id").value = info._id ? info._id : "";
+			document.getElementById("coordinate").value = JSON.stringify(info.coordinate);
+		};
+		row.appendChild(button);
 
 		card.appendChild(title);
 		card.appendChild(address);
@@ -126,10 +139,19 @@ class Card {
         </div>
         <div class="btn-row">
             <div></div>
-            <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">
-                <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm
-            </button>
         </div>`;
+		const button = document.createElement("button");
+		button.classList.add("btn", "btn-outline-danger");
+		button.id = "report";
+		button.setAttribute("data-bs-toggle", "modal");
+		button.setAttribute("data-bs-target", "#reportModal");
+		button.innerHTML = `<i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm`;
+		button.onclick = () => {
+			console.log(info);
+			document.getElementById("id").value = info._id;
+			document.getElementById("coordinate").value = JSON.stringify(info.coordinate);
+		};
+		card.getElementsByClassName("btn-row")[0].appendChild(button);
 		return card;
 	}
 }

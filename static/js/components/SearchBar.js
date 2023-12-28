@@ -22,8 +22,8 @@ export default class root {
 						map.updateSelectedMarker(latLng, place.formatted_address);
 
 						// Update banner for the selected place
-						map.cards.setCardsForUserSelection(await map.getDetailsFromCoordinate(latLng));
-						map.sideBar.setContent(1, map.cards.root);
+						map.locDes.setCardsForUserSelection(await map.getDetailsFromCoordinate(latLng));
+						map.sideBar.setActive(1);
 
 						return latLng;
 					} else {

@@ -1,6 +1,6 @@
 export class Service {
-	constructor(IMap) {
-		this.map = IMap;
+	constructor(map) {
+		this.map = map;
 		this.infoWindow = new google.maps.InfoWindow();
 	}
 
@@ -51,14 +51,13 @@ export class Service {
 		this.map.map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(container);
 
 		toggleAds.addEventListener("change", (event) => {
-			this.map.setMapOnAll(event.target.checked ? this.map.map : null);
-			event.target.checked
-				? this.map.cluster.addMarkers(this.map.marker.map((marker) => marker.marker))
-				: this.map.cluster.clearMarkers();
+			event.target.checked ? this.map.setAdCluster() : this.map.removeAdCluster();
+			this.map.setAdOnAll(event.target.checked);
 		});
 
 		toggleReports.addEventListener("change", (event) => {
-			this.map.setReportOnAll(event.target.checked ? this.map.map : null);
+			event.target.checked ? this.map.setReportCluster() : this.map.removeReportCluster();
+			this.map.setReportOnAll(event.target.checked);
 		});
 	}
 
@@ -103,60 +102,5 @@ export class Service {
 
 		const outcome = await response.json();
 		return outcome.success;
-	}
-
-	catchUserSelectedLocation(form) {
-		this.map.map.addListener("click", async (event) => {
-			// This modified func will allow to show only one userSelectedMarker
-			this.map.updateSelectedMarker(event.latLng, "Vị trí bạn chọn");
-
-			// Update card
-			this.map.cards.setCardsForUserSelection(
-				await this.map.getDetailsFromCoordinate(event.latLng)
-			);
-			this.map.sideBar.setContent(1, this.map.cards.root);
-			this.map.sideBar.show();
-
-			form.setPosition(event.latLng);
-			form.setAdsId("");
-		});
-	}
-
-	clusterMarkers() {
-		this.map.setCluster();
-	}
-
-	catchUserClickMarker(form) {
-		this.map.marker.forEach((marker) => {
-			marker.addListener("click", () => {
-				form.setPosition(marker.getPosition());
-				form.setAdsId(marker.getAdsId());
-			});
-		});
-	}
-
-	async loadReportMarkers() {
-		const tmpThis = this;
-		try {
-			const response = await fetch("http://localhost:3456/report/");
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			const list = await response.json();
-			for await (const report of list) {
-				const contentString =
-					"<div class='card' style='width: 18rem;padding:0; border:none'>" +
-					`<h5 class="card-title">${report.typeReport}</h5>` +
-					`<p class="card-text">${report.email}</p>` +
-					`<p class="card-text" style='font-weight:bold; font-style: italic'>${
-						report.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ"
-					}</p>` +
-					"</div>";
-
-				tmpThis.map.pushReportMarker(report, "", contentString);
-			}
-		} catch (error) {
-			console.error(error);
-		}
 	}
 }

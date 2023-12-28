@@ -1,4 +1,4 @@
-export default class CustomMarker {
+export default class Marker {
 	#pinCustom = {
 		zoning: {
 			background: "#6600ff",

@@ -1,13 +1,22 @@
-import SideBar from "../service/SideBar.js";
-import Description from "../service/Description.js";
+import SideBar from "../components/SideBar.js";
+import Description from "../components/Description.js";
 import CustomMarker from "./Marker.js";
+import GeoService from "./GeoService.js";
+
 export class IMap {
 	constructor() {
 		this.map = null;
-		this.marker = [];
+		this.adMarker = {
+			markers: [],
+			cluster: null,
+		};
+		this.reportMarker = {
+			markers: [],
+			cluster: null,
+		};
 		this.currentLocation = null;
 		this.currentMarker = null;
-		this.userSelectedMarker = null;
+		this.selectedMarker = null;
 		this.infoWindow = null;
 		this.sideBar = new SideBar();
 		this.searchDes = new Description();
@@ -15,6 +24,38 @@ export class IMap {
 		this.reportDes = new Description();
 		this.cluster = null;
 		this.reportMarkers = [];
+		this.returnData = null;
+		this.handleChange = (_data) => {};
+	}
+
+	// Private variables
+	#styledMapTypes = [
+		{
+			featureType: "transit.station",
+			elementType: "labels",
+			stylers: [{ visibility: "off" }],
+		},
+		{
+			featureType: "poi",
+			elementType: "labels",
+			stylers: [{ visibility: "off" }],
+		},
+		{
+			featureType: "poi",
+			elementType: "labels.text",
+			stylers: [{ visibility: "on" }],
+		},
+	];
+
+	// Private methods
+
+	#initCluster() {
+		let markers = this.adMarker.markers.map((marker) => marker.marker);
+		const map = this.map;
+		this.adMarker.cluster = new markerClusterer.MarkerClusterer({ markers, map });
+
+		markers = this.reportMarker.markers.map((marker) => marker.marker);
+		this.reportMarker.cluster = new markerClusterer.MarkerClusterer({ markers, map });
 	}
 
 	#initSideBar() {
@@ -23,9 +64,10 @@ export class IMap {
 		this.sideBar.initContent(2, () => {}, this.reportDes.root);
 	}
 
-	async initMap() {
+	async init() {
 		await google.maps.importLibrary("maps");
-		this.currentLocation = await this.getCurrentLocation();
+		const geolocation = new GeoService();
+		this.currentLocation = await geolocation.getCurrentLocation();
 		this.#initSideBar();
 
 		this.infoWindow = new google.maps.InfoWindow();
@@ -34,24 +76,6 @@ export class IMap {
 			this.reportDes.reset();
 			this.sideBar.hide();
 		});
-
-		const styledMapType = new google.maps.StyledMapType([
-			{
-				featureType: "transit.station",
-				elementType: "labels",
-				stylers: [{ visibility: "off" }],
-			},
-			{
-				featureType: "poi",
-				elementType: "labels",
-				stylers: [{ visibility: "off" }],
-			},
-			{
-				featureType: "poi",
-				elementType: "labels.text",
-				stylers: [{ visibility: "on" }],
-			},
-		]);
 
 		this.map = new google.maps.Map(document.getElementById("map"), {
 			center: this.currentLocation,
@@ -64,49 +88,23 @@ export class IMap {
 			mapTypeControl: false,
 		});
 
+		// Config styled map types
+		const styledMapType = new google.maps.StyledMapType(this.#styledMapTypes);
 		this.map.mapTypes.set("map", styledMapType);
 		this.map.setMapTypeId("map");
-		this.updateCurrentLoc(this.currentLocation, "Bạn đang ở đây");
-		this.initCluster();
+
+		this.updateCurrentLoc(this.currentLocation);
+		this.#initCluster();
+
 		return this.map;
 	}
 
-	async getCurrentLocation() {
-		const pos = await new Promise((resolve, reject) => {
-			if (!navigator.geolocation) reject("Geolocation is not supported by your browser");
-
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					resolve({
-						lat: position.coords.latitude,
-						lng: position.coords.longitude,
-					});
-				},
-				() => {
-					// If user denied permission, current location is at HCMUS
-					resolve({
-						lat: 10.762838024314062,
-						lng: 106.68248463223016,
-					});
-				},
-				{
-					// This options means that getCurrentPosition will wait for 5s before timeout
-					enableHighAccuracy: true,
-					timeout: 5000,
-					maximumAge: 0,
-				}
-			);
-		});
-		return pos;
-	}
-
-	async pushCustomMarker(position, title, content = title, zoning = true, id) {
+	async pushAdMarker(location, title, content = title) {
 		const marker = new CustomMarker(
 			this.map,
-			position,
+			location.coordinate,
 			title,
-			zoning ? "zoning" : "not_zoning",
-			id
+			location.zoning ? "zoning" : "not_zoning"
 		);
 		await marker.init();
 
@@ -119,94 +117,13 @@ export class IMap {
 			});
 
 			// Update side bar
-			this.locDes.setCardsForAds(position);
+			this.locDes.setCardsForAds(location.coordinate);
 			this.sideBar.setActive(1);
 			this.sideBar.show();
-			this.userSelectedMarker && this.userSelectedMarker.setMap(null);
+			this.selectedMarker && this.selectedMarker.setMap(null);
 		});
-		this.marker.push(marker);
-	}
 
-	updateCurrentLoc(position, title) {
-		// Update position of the marker
-		if (this.currentMarker) {
-			this.currentMarker.setPosition(position);
-		} else {
-			const marker = new CustomMarker(this.map, position, title, "current");
-			marker.init().then(() => {
-				// Set new marker
-				this.currentMarker = marker;
-			});
-		}
-	}
-
-	updateSelectedMarker(position, title) {
-		// Clear old marker if exist
-		if (this.userSelectedMarker) {
-			this.userSelectedMarker.setMap(this.map);
-			this.userSelectedMarker.setPosition(position);
-			this.infoWindow.close();
-		} else {
-			const marker = new CustomMarker(this.map, position, title, "select");
-			marker.init().then(() => {
-				// Set new marker
-				this.userSelectedMarker = marker;
-			});
-		}
-	}
-
-	setMapOnAll(map) {
-		this.marker.forEach((marker) => marker.setMap(map));
-	}
-
-	setReportOnAll(map) {
-		this.reportMarkers.forEach((marker) => marker.setMap(map));
-	}
-
-	async getPlacesID(latlng) {
-		const geocoder = new google.maps.Geocoder();
-		return new Promise((resolve, reject) => {
-			geocoder
-				.geocode({ location: latlng })
-				.then((response) => {
-					if (response.results[0]) resolve(response.results[0].place_id);
-					else reject("No results found");
-				})
-				.catch((e) => reject("Geocoder failed due to: " + e));
-		});
-	}
-
-	async getDetailsFromCoordinate(latlng) {
-		const placeID = await this.getPlacesID(latlng);
-
-		const response = await fetch(
-			`https://places.googleapis.com/v1/places/${placeID}?fields=displayName,formattedAddress&key=AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA`
-		);
-		const data = await response.json();
-		const firstComponentAddress = data.formattedAddress.split(",")[0];
-
-		if (firstComponentAddress === data.displayName.text)
-			return {
-				name: "Vị trí chưa được đặt tên",
-				address: data.formattedAddress,
-			};
-		else;
-		return { name: data.displayName.text, address: data.formattedAddress };
-	}
-
-	initCluster() {
-		const markers = this.marker.map((marker) => marker.marker);
-		const map = this.map;
-		this.cluster = new markerClusterer.MarkerClusterer({ markers, map });
-	}
-
-	setCluster() {
-		const markers = this.marker.map((marker) => marker.marker);
-		this.cluster.addMarkers(markers);
-	}
-
-	removeCluster() {
-		this.cluster.clearMarkers();
+		this.adMarker.markers.push(marker);
 	}
 
 	async pushReportMarker(report, title, content = title) {
@@ -225,8 +142,79 @@ export class IMap {
 			this.reportDes.setCardsForReport(report);
 			this.sideBar.setActive(2);
 			this.sideBar.show();
-			this.userSelectedMarker && this.userSelectedMarker.setMap(null);
+			this.selectedMarker && this.selectedMarker.setMap(null);
 		});
-		this.reportMarkers.push(marker);
+		this.reportMarker.markers.push(marker);
+	}
+
+	setAdCluster() {
+		const markers = this.adMarker.markers.map((marker) => marker.marker);
+		this.adMarker.cluster.addMarkers(markers);
+	}
+
+	setReportCluster() {
+		const markers = this.reportMarker.markers.map((marker) => marker.marker);
+		this.reportMarker.cluster.addMarkers(markers);
+	}
+
+	removeAdCluster() {
+		const markers = this.reportMarker.markers.map((marker) => marker.marker);
+		this.adMarker.cluster.clearMarkers(markers);
+	}
+
+	removeReportCluster() {
+		const markers = this.reportMarker.markers.map((marker) => marker.marker);
+		this.reportMarker.cluster.clearMarkers(markers);
+	}
+
+	updateCurrentLoc(position) {
+		// Update position of the marker
+		if (this.currentMarker) {
+			this.currentMarker.setPosition(position);
+		} else {
+			const marker = new CustomMarker(this.map, position, "Bạn đang ở đây", "current");
+			marker.init().then((result) => {
+				// Set new marker
+				this.currentMarker = result;
+			});
+		}
+	}
+
+	updateSelectedMarker(position) {
+		// Clear old marker if exist
+		if (this.selectedMarker) {
+			this.selectedMarker.setMap(this.map);
+			this.selectedMarker.setPosition(position);
+			this.infoWindow.close();
+		} else {
+			const marker = new CustomMarker(this.map, position, "Vị trí bạn chọn", "select");
+			marker.init().then(() => {
+				// Set new marker
+				this.selectedMarker = marker;
+			});
+		}
+	}
+
+	catchSelectedLocation() {
+		this.map.addListener("click", async (event) => {
+			// This modified func will allow to show only one userSelectedMarker
+			this.updateSelectedMarker(event.latLng);
+
+			// Update card
+			const geolocation = new GeoService();
+			this.locDes.setCardsForUserSelection(
+				await geolocation.getDetailsFromCoordinate(event.latLng)
+			);
+			this.sideBar.setActive(1);
+			this.sideBar.show();
+		});
+	}
+
+	setAdOnAll(status) {
+		this.adMarker.markers.forEach((marker) => marker.setMap(status ? this.map : null));
+	}
+
+	setReportOnAll(status) {
+		this.reportMarker.markers.forEach((marker) => marker.setMap(status ? this.map : null));
 	}
 }

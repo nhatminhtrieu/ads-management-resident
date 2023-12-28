@@ -4,23 +4,16 @@ export default class Form {
 		this.form = document.querySelector("form#reportForm");
 		this.typeInput = document.getElementById("type");
 		this.nameInput = document.getElementById("name");
+		this.idInput = document.getElementById("id");
+		this.coordinateInput = document.getElementById("coordinate");
 		this.emailInput = document.getElementById("email");
 		this.phoneInput = document.getElementById("phone");
 		this.contentInput = document.getElementById("content");
 		this.imgsInput = document.querySelector("input#formFileMultiple");
 		this.submitBtn = document.querySelector('button[type="submit"]');
 		this.map = map;
-		this.pos = {};
-		this.adsId = "";
+		this.info = {};
 		this.captcha = false;
-	}
-
-	setPosition(coordinate) {
-		this.pos = coordinate;
-	}
-
-	setAdsId(id) {
-		this.adsId = id;
 	}
 
 	setCaptcha(verify) {
@@ -72,15 +65,15 @@ export default class Form {
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
-
+			console.log(this.idInput.value);
 			const response = await fetch("http://localhost:3456/report/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					id: this.adsId || null,
-					coordinate: this.pos,
+					id: this.idInput.value !== "undefined" ? this.idInput.value : null,
+					coordinate: JSON.parse(this.coordinateInput.value),
 					typeReport: this.typeInput.value,
 					email: this.emailInput.value,
 					name: this.nameInput.value,
@@ -93,7 +86,7 @@ export default class Form {
 
 			const outcome = await response.json();
 			const idReports = JSON.parse(localStorage.getItem("idReports"));
-			console.log(typeof idReports);
+			if (idReports == null) idReports = [];
 			idReports.push(outcome._id);
 			localStorage.setItem("idReports", JSON.stringify(idReports));
 			this.map.pushReportMarker(outcome, "", content);

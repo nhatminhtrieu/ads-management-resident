@@ -94,6 +94,33 @@
 						</div>
 						<div class="modal-body">
 							<form class="row g-3" method="post" enctype="multipart/form-data" id="reportForm">
+								<div class="mb-3 d-none">
+									<label for="name" class="form-label"
+										>ID <span style="font-weight: bold; color: red">*</span></label
+									>
+									<input
+										type="text"
+										class="form-control"
+										aria-label="name"
+										id="id"
+										name="id"
+										readonly
+									/>
+								</div>
+								<div class="mb-3 d-none">
+									<label for="name" class="form-label"
+										>Coordinate <span style="font-weight: bold; color: red">*</span></label
+									>
+									<input
+										type="text"
+										class="form-control"
+										aria-label="name"
+										id="coordinate"
+										name="coordinate"
+										required
+										readonly
+									/>
+								</div>
 								<div class="mb-3">
 									<label for="type" class="form-label"
 										>Hình thức báo cáo <span style="font-weight: bold; color: red">*</span></label

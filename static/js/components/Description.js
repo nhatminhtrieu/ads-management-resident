@@ -78,7 +78,7 @@ class Description {
 			})
 			.then((ads) => {
 				ads.forEach((ad) => {
-					const card = new Card(ad);
+					const card = new Card(ad, "ads", coordinate);
 					this.cardList.append(card.root);
 					this.root.innerHTML = "";
 					this.root.appendChild(this.cardList.root);
@@ -95,7 +95,7 @@ class Description {
 		this.cardList.reset();
 
 		const card1 = new Card(info, "nonads");
-		const card2 = new Card(info, "userselection");
+		const card2 = new Card(info, "userselection", info.coordinate);
 
 		this.cardList.append(card1.root);
 		this.cardList.append(card2.root);
