@@ -1,14 +1,15 @@
 export default class CardList {
 	constructor() {
-		this.list = document.createElement("div");
-		this.list.classList.add("column");
+		this.root = document.createElement("div");
+		this.root.classList.add("column");
+		this.root.id = "card-list";
 	}
 
 	append(newItem) {
-		this.list.appendChild(newItem);
+		this.root.appendChild(newItem);
 	}
 
 	reset() {
-		this.list.replaceChildren("");
+		this.root.replaceChildren("");
 	}
 }

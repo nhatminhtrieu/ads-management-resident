@@ -1,33 +1,33 @@
+const DATABASE = "http://localhost:3456";
+
 class Card {
-	constructor() {
-		this.root = document.createElement("div");
+	#map = {
+		ads: this.#createAds,
+		nonads: this.#createNonAds,
+		report: this.#createReport,
+		userselection: this.#createUserSelection,
+	};
 
-		this.cardList = document.createElement("div");
-		this.cardList.classList.add("column");
-		this.cardList.id = "card-list";
-
-		this.sidebar = document.getElementById("side-bar");
-
-		this.infoModal = document.querySelector("#infoModal");
-		this.infoModalBody = document.querySelector("#infoModal .modal-body");
+	constructor(info, type = "ads") {
+		this.root = this.#map[type](info);
 	}
 
-	createCardForAds(cardInfo) {
+	#createAds(info) {
 		const card = document.createElement("div");
 		card.classList.add("card", "card-body", "mb-3");
 		const title = document.createElement("h5");
 		title.classList.add("card-title");
-		title.innerText = cardInfo.typeBoard;
+		title.innerText = info.typeBoard;
 
 		const address = document.createElement("p");
 		address.classList.add("card-text");
-		address.innerText = cardInfo.address["formatted_text"];
+		address.innerText = info.address["formatted_text"];
 
 		const list = document.createElement("ul");
-		list.innerHTML = `<li>Kích thước: <em>${cardInfo.size}</em></li>\
-      <li>Số lượng: <em>${cardInfo.number}</em></li>\
-      <li>Hình thức: <em>${cardInfo.typeAds}</em></li>\
-      <li>Phân loại: <em>${cardInfo.typeLoc}</em</li>\
+		list.innerHTML = `<li>Kích thước: <em>${info.size}</em></li>\
+      <li>Số lượng: <em>${info.number}</em></li>\
+      <li>Hình thức: <em>${info.typeAds}</em></li>\
+      <li>Phân loại: <em>${info.typeLoc}</em</li>\
     `;
 
 		const row = document.createElement("div");
@@ -48,189 +48,45 @@ class Card {
 		return card;
 	}
 
-	setCardsForAds(coordinate) {
-		// Clear the old banner
-		this.cardList.innerHTML = "";
-		this.infoModalBody.innerHTML = "";
-
-		fetch(`http://localhost:3456/advertisement?lat=${coordinate.lat}&lng=${coordinate.lng}`)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.json();
-			})
-			.then((ads) => {
-				ads.forEach((ad) => {
-					const card = this.createCardForAds(ad);
-					this.cardList.appendChild(card);
-					this.root.innerHTML = "";
-					this.root.appendChild(this.cardList);
-
-					this.createModalForAd(ad);
-				});
-
-				this.handleViewDetail();
-			})
-			.catch((error) => console.error(error));
-	}
-
-	createCardForNonAds() {
+	#createNonAds(_info) {
 		const card = document.createElement("div");
 		card.classList.add("card", "card-body", "non-ads-card", "col-12", "mb-3");
-
-		const row = document.createElement("div");
-		row.classList.add("row");
-
-		const leftSide = document.createElement("div");
-		leftSide.classList.add("col-1");
-		leftSide.innerHTML = '<i class="bi bi-info-circle"></i>';
-
-		const rightSide = document.createElement("div");
-		rightSide.classList.add("col-11");
-
-		const title = document.createElement("h5");
-		title.classList.add("card-title");
-		title.innerText = "Thông tin bảng quảng cáo";
-
-		const info = document.createElement("div");
-		info.classList.add("card-text");
-		info.innerHTML = `<strong> Chưa có dữ liệu! </strong>
-        <div>Vui lòng chọn điểm trên bản đồ để xem</div>`;
-
-		rightSide.appendChild(title);
-		rightSide.appendChild(info);
-
-		row.appendChild(leftSide);
-		row.appendChild(rightSide);
-
-		card.appendChild(row);
+		card.innerHTML = `<div class="row">\
+            <div class="col-1">\
+                <i class="bi bi-info-circle"></i>\
+                </div>\
+                <div class="col-11">\
+                    <h5 class="card-title">Thông tin bảng quảng cáo</h5>\
+                    <div class="card-text">\
+                    <strong> Chưa có dữ liệu! </strong>\
+                    <div>Vui lòng chọn điểm trên bản đồ để xem</div>\
+                </div>\
+            </div>\
+        </div>`;
 		return card;
 	}
 
-	createCardForUserSelection(cardInfo) {
-		const card = document.createElement("div");
-		card.classList.add("card", "card-body", "user-selection-card", "col-12", "mb-3");
-
-		const row = document.createElement("div");
-		row.classList.add("row", "mb-3");
-
-		const leftSide = document.createElement("div");
-		leftSide.classList.add("col-1");
-		leftSide.innerHTML = '<i class="bi bi-check2-circle"></i>';
-
-		const rightSide = document.createElement("div");
-		rightSide.classList.add("col-11");
-
-		const title = document.createElement("h5");
-		title.classList.add("card-title");
-		title.innerText = "Thông tin địa điểm";
-
-		const info = document.createElement("div");
-		info.classList.add("card-text");
-		info.innerHTML = `<strong> ${cardInfo.name} </strong>
-        <div> ${cardInfo.address} </div>`;
-
-		const functionRow = document.createElement("div");
-		functionRow.classList.add("btn-row");
-		// Use empty div to align the button to the right
-		functionRow.innerHTML = `<div></div>
-      <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">
-        <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm
-      </button>`;
-
-		rightSide.appendChild(title);
-		rightSide.appendChild(info);
-
-		row.appendChild(leftSide);
-		row.appendChild(rightSide);
-
-		card.appendChild(row);
-		card.appendChild(functionRow);
-		return card;
-	}
-
-	setCardsForUserSelection(cardInfo) {
-		// Clear the old banner
-		this.cardList.innerHTML = "";
-
-		const card1 = this.createCardForNonAds();
-		const card2 = this.createCardForUserSelection(cardInfo);
-
-		this.cardList.appendChild(card1);
-		this.cardList.appendChild(card2);
-		this.root.innerHTML = "";
-		this.root.appendChild(this.cardList);
-	}
-
-	createModalForAd(ad) {
-		const wrap = document.createElement("div");
-		wrap.setAttribute("id", "wrap");
-		wrap.style = `display: none;`;
-
-		const img = document.createElement("img");
-		img.style = `width: 400px; height: 300px; object-fit: cover;`;
-		fetch(`http://localhost:3456/image?id=${ad.imgs[0]}`)
-			.then((response) => {
-				return response.json();
-			})
-			.then((image) => {
-				img.setAttribute("src", image.url);
-			})
-			.catch((error) => {
-				img.setAttribute(
-					"src",
-					"https://images.unsplash.com/photo-1553096442-8fe2118fb927?ixid=M3w1NDE3MjR8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTcwMjc0NjU0MHww&ixlib=rb-4.0.3"
-				);
-			});
-
-		const exp = new Date(ad.exp);
-		const date = document.createElement("div");
-		date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toLocaleString("en-GB", {
-			timeZone: "UTC",
-		})} GMT`;
-
-		wrap.appendChild(img);
-		wrap.appendChild(date);
-
-		this.infoModalBody.appendChild(wrap);
-	}
-
-	handleViewDetail() {
-		const infoBtns = document.querySelectorAll("button#info");
-		infoBtns &&
-			infoBtns.forEach((btn, id) => {
-				btn.addEventListener("click", () => {
-					const contents = document.querySelectorAll("#infoModal .modal-body div#wrap");
-					contents.forEach((content) => (content.style = `display: none !important;`));
-					contents[
-						id
-					].style = `display: flex !important; flex-direction: column; align-items: center; gap: 20px;`;
-				});
-			});
-	}
-
-	createCardForReport(report) {
+	#createReport(info) {
 		const card = document.createElement("div");
 		card.classList.add("card", "card-body", "mb-3");
-		const title = document.createElement("h5");
-		title.classList.add("card-title");
-		title.innerText = report.typeReport;
 
-		const list = document.createElement("ul");
-		list.innerHTML = `<li>Email: <em>${report.email}</em></li>\
-      <li>Họ và tên: <em>${report.name}</em></li>\
-      <li>Số điện thoại: <em>${report.phone}</em></li>\
-      <li>Nội dung báo cáo: ${report.content}</li>\
-    `;
+		const list = document.createElement("div");
+		list.innerHTML = `
+		<h5 class="card-title">${info.typeReport}</h5>
+		<ul>
+			<li>Email: <em>${info.email}</em></li>\
+			<li>Họ và tên: <em>${info.name}</em></li>\
+			<li>Số điện thoại: <em>${info.phone}</em></li>\
+			<li>Nội dung báo cáo: ${info.content}</li>\
+		</ul>
+		`;
 
-		card.appendChild(title);
 		card.append(list);
 
-		report.imgs.forEach((imgId) => {
+		info.imgs.forEach((imgId) => {
 			const img = document.createElement("img");
 			img.style = `padding-bottom: "20px"`;
-			fetch(`http://localhost:3456/image?id=${imgId}`)
+			fetch(`${DATABASE}/image?id=${imgId}`)
 				.then((response) => {
 					return response.json();
 				})
@@ -243,27 +99,38 @@ class Card {
 						"https://images.unsplash.com/photo-1553096442-8fe2118fb927?ixid=M3w1NDE3MjR8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTcwMjc0NjU0MHww&ixlib=rb-4.0.3"
 					);
 				});
-
 			card.append(img);
 		});
 
 		const status = document.createElement("p");
-		status.classList.add("card-text");
-		status.style = "font-weight:bold; font-style: italic";
-		status.innerText = report.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
-
+		status.classList.add("card-text", "fw-bold", "fst-italic");
+		status.innerText = info.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
 		card.append(status);
-
 		return card;
 	}
 
-	setCardsForReport(report) {
-		this.cardList.innerHTML = "";
-
-		const card = this.createCardForReport(report);
-		this.cardList.appendChild(card);
-		this.root.innerHTML = "";
-		this.root.appendChild(this.cardList);
+	#createUserSelection(info) {
+		const card = document.createElement("div");
+		card.classList.add("card", "card-body", "user-selection-card", "col-12", "mb-3");
+		card.innerHTML = `<div class="row mb-3">
+            <div class="col-1">
+                <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="col-11">
+                <h5 class="card-title">Thông tin địa điểm</h5>
+                <div class="card-text">
+                    <strong> ${info.name} </strong>
+                    <div> ${info.address} </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-row">
+            <div></div>
+            <button class="btn btn-outline-danger" id="report" data-bs-toggle="modal" data-bs-target="#reportModal">
+                <i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm
+            </button>
+        </div>`;
+		return card;
 	}
 }
 

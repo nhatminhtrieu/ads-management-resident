@@ -1,5 +1,5 @@
 import SideBar from "../service/SideBar.js";
-import Card from "../service/Card.js";
+import Description from "../service/Description.js";
 import CustomMarker from "./Marker.js";
 export class IMap {
 	constructor() {
@@ -10,19 +10,28 @@ export class IMap {
 		this.userSelectedMarker = null;
 		this.infoWindow = null;
 		this.sideBar = new SideBar();
-		this.cards = new Card();
+		this.searchDes = new Description();
+		this.locDes = new Description();
+		this.reportDes = new Description();
 		this.cluster = null;
 		this.reportMarkers = [];
+	}
+
+	#initSideBar() {
+		this.sideBar.init();
+		this.sideBar.initContent(1, () => {}, this.locDes.root);
+		this.sideBar.initContent(2, () => {}, this.reportDes.root);
 	}
 
 	async initMap() {
 		await google.maps.importLibrary("maps");
 		this.currentLocation = await this.getCurrentLocation();
-		this.sideBar.init();
+		this.#initSideBar();
 
 		this.infoWindow = new google.maps.InfoWindow();
 		this.infoWindow.addListener("closeclick", () => {
-			this.sideBar.removeContent(1);
+			this.locDes.reset();
+			this.reportDes.reset();
 			this.sideBar.hide();
 		});
 
@@ -110,8 +119,8 @@ export class IMap {
 			});
 
 			// Update side bar
-			this.cards.setCardsForAds(position);
-			this.sideBar.setContent(1, this.cards.root);
+			this.locDes.setCardsForAds(position);
+			this.sideBar.setActive(1);
 			this.sideBar.show();
 			this.userSelectedMarker && this.userSelectedMarker.setMap(null);
 		});
@@ -213,9 +222,8 @@ export class IMap {
 			});
 
 			// Update side bar
-			const reportCards = new Card();
-			reportCards.setCardsForReport(report);
-			this.sideBar.setContent(2, reportCards.root);
+			this.reportDes.setCardsForReport(report);
+			this.sideBar.setActive(2);
 			this.sideBar.show();
 			this.userSelectedMarker && this.userSelectedMarker.setMap(null);
 		});
