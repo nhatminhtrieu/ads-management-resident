@@ -65,7 +65,6 @@ export default class Form {
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
-			console.log(this.idInput.value);
 			const response = await fetch("http://localhost:3456/report/create", {
 				method: "POST",
 				headers: {
@@ -86,7 +85,6 @@ export default class Form {
 
 			const outcome = await response.json();
 			let idReports = JSON.parse(localStorage.getItem("idReports"));
-			console.log(idReports);
 			if (idReports == null) idReports = [];
 			idReports.push(outcome._id);
 			localStorage.setItem("idReports", JSON.stringify(idReports));

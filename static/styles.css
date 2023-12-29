@@ -44,8 +44,8 @@
 	color: #a0a0a0;
 }
 
-.tab-icon :hover {
-	color: rgb(111, 164, 255);
+.tab-icon:hover {
+	color: rgb(111, 164, 255) !important;
 }
 
 .tab-active {
