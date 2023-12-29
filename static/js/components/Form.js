@@ -85,7 +85,8 @@ export default class Form {
 			});
 
 			const outcome = await response.json();
-			const idReports = JSON.parse(localStorage.getItem("idReports"));
+			let idReports = JSON.parse(localStorage.getItem("idReports"));
+			console.log(idReports);
 			if (idReports == null) idReports = [];
 			idReports.push(outcome._id);
 			localStorage.setItem("idReports", JSON.stringify(idReports));

@@ -38,6 +38,8 @@ export default class SideBar {
 
 	async savedReports() {
 		let cardList = new CardList();
+		const data = localStorage.getItem("idReports");
+		if (!data) localStorage.setItem("idReports", "[]");
 		const idReports = JSON.parse(localStorage.getItem("idReports"));
 		for (let i = 0; i < idReports.length; i = i + 1) {
 			const response = await fetch(`${DATABASE}/report/detail?id=${idReports[i]}`);
