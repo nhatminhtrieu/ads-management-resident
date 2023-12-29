@@ -38,8 +38,7 @@ class Card {
 		row.innerHTML =
 			'<button type="button" class="btn btn-icon" id="info" data-bs-toggle="modal" data-bs-target="#infoModal">\
         <i class="bi bi-info-circle"></i>\
-        </button>\
-   `	 ';
+        </button>';
 
 		const button = document.createElement("button");
 		button.classList.add("btn", "btn-outline-danger");
@@ -48,7 +47,6 @@ class Card {
 		button.setAttribute("data-bs-target", "#reportModal");
 		button.innerHTML = `<i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm`;
 		button.onclick = () => {
-			console.log(info);
 			document.getElementById("id").value = info._id ? info._id : "";
 			document.getElementById("coordinate").value = JSON.stringify(info.coordinate);
 		};

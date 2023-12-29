@@ -84,7 +84,6 @@ async function main() {
 	const form = new Form(map);
 	map.catchSelectedLocation();
 
-	// service.catchUserClickMarker(form);
 	form.resetFormFields();
 	const captcha = await service.verifyCaptcha();
 	form.setCaptcha(captcha);

@@ -24,9 +24,7 @@ export default class SearhBar {
 
 						// Update banner for the selected place
 						const service = new GeoService();
-						map.locDes.setCardsForUserSelection(await service.getDetailsFromCoordinate(latLng));
-						map.sideBar.setActive(1);
-
+						map.sideBar.setCardsForUserSelection(await service.getDetailsFromCoordinate(latLng));
 						return latLng;
 					} else {
 						console.log("Geocode was not successful for the following reason: " + status);
