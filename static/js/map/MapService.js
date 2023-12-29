@@ -1,7 +1,9 @@
+import GeoService from "./GeoService.js";
 export class Service {
 	constructor(map) {
 		this.map = map;
 		this.infoWindow = new google.maps.InfoWindow();
+		this.geolocation = new GeoService();
 	}
 
 	moveToCurrentLocation() {
@@ -14,12 +16,13 @@ export class Service {
 
 		locationButton.addEventListener("click", async () => {
 			try {
-				const pos = await this.map.getCurrentLocation();
-				this.map.currentLocation = pos;
-				this.map.updateCurrentLoc(pos, "Bạn đang ở đây");
+				const pos = await this.geolocation.getCurrentLocation();
+				console.log(pos);
+				this.map.updateCurrentLoc(pos);
 				this.map.map.setCenter(pos);
-				this.map.map.setZoom(19);
+				this.map.map.setZoom(16);
 			} catch (error) {
+				console.log(error);
 				this.handleLocationError(false, this.infoWindow, this.map.map.getCenter(), this.map.map);
 			}
 		});

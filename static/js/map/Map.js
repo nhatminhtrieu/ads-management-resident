@@ -1,5 +1,4 @@
 import SideBar from "../components/SideBar.js";
-import Description from "../components/Description.js";
 import CustomMarker from "./Marker.js";
 import GeoService from "./GeoService.js";
 
@@ -19,13 +18,6 @@ export class IMap {
 		this.selectedMarker = null;
 		this.infoWindow = null;
 		this.sideBar = new SideBar();
-		this.searchDes = new Description();
-		this.locDes = new Description();
-		this.reportDes = new Description();
-		this.cluster = null;
-		this.reportMarkers = [];
-		this.returnData = null;
-		this.handleChange = (_data) => {};
 	}
 
 	// Private variables
@@ -48,32 +40,23 @@ export class IMap {
 	];
 
 	// Private methods
-
 	#initCluster() {
-		let markers = this.adMarker.markers.map((marker) => marker.marker);
 		const map = this.map;
+		let markers = this.adMarker.markers.map((marker) => marker.marker);
 		this.adMarker.cluster = new markerClusterer.MarkerClusterer({ markers, map });
-
 		markers = this.reportMarker.markers.map((marker) => marker.marker);
 		this.reportMarker.cluster = new markerClusterer.MarkerClusterer({ markers, map });
-	}
-
-	#initSideBar() {
-		this.sideBar.init();
-		this.sideBar.initContent(1, () => {}, this.locDes.root);
-		this.sideBar.initContent(2, () => {}, this.reportDes.root);
 	}
 
 	async init() {
 		await google.maps.importLibrary("maps");
 		const geolocation = new GeoService();
 		this.currentLocation = await geolocation.getCurrentLocation();
-		this.#initSideBar();
+		this.sideBar.init();
 
 		this.infoWindow = new google.maps.InfoWindow();
 		this.infoWindow.addListener("closeclick", () => {
-			this.locDes.reset();
-			this.reportDes.reset();
+			this.sideBar.reset([1, 2]);
 			this.sideBar.hide();
 		});
 
@@ -117,8 +100,7 @@ export class IMap {
 			});
 
 			// Update side bar
-			this.locDes.setCardsForAds(location.coordinate);
-			this.sideBar.setActive(1);
+			this.sideBar.setCardsForAds(location.coordinate);
 			this.sideBar.show();
 			this.selectedMarker && this.selectedMarker.setMap(null);
 		});
@@ -139,8 +121,7 @@ export class IMap {
 			});
 
 			// Update side bar
-			this.reportDes.setCardsForReport(report);
-			this.sideBar.setActive(2);
+			this.sideBar.setCardsForReport(report);
 			this.sideBar.show();
 			this.selectedMarker && this.selectedMarker.setMap(null);
 		});
@@ -173,9 +154,9 @@ export class IMap {
 			this.currentMarker.setPosition(position);
 		} else {
 			const marker = new CustomMarker(this.map, position, "Bạn đang ở đây", "current");
-			marker.init().then((result) => {
+			marker.init().then(() => {
 				// Set new marker
-				this.currentMarker = result;
+				this.currentMarker = marker;
 			});
 		}
 	}
@@ -202,10 +183,9 @@ export class IMap {
 
 			// Update card
 			const geolocation = new GeoService();
-			this.locDes.setCardsForUserSelection(
+			this.sideBar.setCardsForUserSelection(
 				await geolocation.getDetailsFromCoordinate(event.latLng)
 			);
-			this.sideBar.setActive(1);
 			this.sideBar.show();
 		});
 	}

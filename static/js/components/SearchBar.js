@@ -1,4 +1,5 @@
-export default class root {
+import GeoService from "../map/GeoService.js";
+export default class SearhBar {
 	constructor() {
 		this.searchBox = null;
 		this.root = document.createElement("input");
@@ -22,7 +23,8 @@ export default class root {
 						map.updateSelectedMarker(latLng, place.formatted_address);
 
 						// Update banner for the selected place
-						map.locDes.setCardsForUserSelection(await map.getDetailsFromCoordinate(latLng));
+						const service = new GeoService();
+						map.locDes.setCardsForUserSelection(await service.getDetailsFromCoordinate(latLng));
 						map.sideBar.setActive(1);
 
 						return latLng;

@@ -1,7 +1,7 @@
 .otpBtn {
 	background-color: #fff;
 	color: rgb(25, 25, 25);
-	border-radius: 16px;
+	border-radius: 1rem;
 	border: 1px solid transparent;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 	margin-top: 10px;
@@ -44,12 +44,12 @@
 	color: #a0a0a0;
 }
 
-.tab-icon:hover {
-	color: black;
+.tab-icon :hover {
+	color: rgb(111, 164, 255);
 }
 
 .tab-active {
-	color: black;
+	color: rgb(0, 94, 255);
 }
 
 .btn-icon {
@@ -73,15 +73,6 @@
 	font-weight: bold;
 }
 
-#visibleAds {
-	padding-left: 0;
-	background: none;
-}
-
-#Ads {
-	margin-left: 8px;
-}
-
 #side-bar {
 	z-index: 1;
 	position: absolute;
@@ -93,7 +84,8 @@
 	background-color: white;
 	box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
 }
-#menu {
+
+#tabs-menu {
 	width: 72px;
 	box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
 	height: 100vh;
@@ -103,7 +95,8 @@
 	padding: 1rem;
 	align-items: center;
 }
-#description {
+
+#tab-contents {
 	z-index: inherit;
 	padding: 1rem;
 	height: 100vh;
@@ -111,6 +104,7 @@
 	display: block;
 	overflow: scroll;
 }
+
 #collapse-btn {
 	position: absolute;
 	margin: -28px;
@@ -131,4 +125,8 @@
 	background-color: #edf7ed;
 	border: none;
 	color: #224924;
+}
+
+#Ads {
+	margin-left: 8px;
 }

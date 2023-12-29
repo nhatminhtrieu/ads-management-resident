@@ -31,8 +31,8 @@
 	<body>
 		<div class="container">
 			<div id="side-bar">
-				<div id="menu">
-					<button class="btn tab-icon" style="border: none">
+				<div id="tabs-menu">
+					<button class="btn tab-icon tab-active" style="border: none">
 						<i class="bi bi-search"></i>
 					</button>
 					<button class="btn tab-icon" style="border: none">
@@ -45,8 +45,24 @@
 						<i class="bi bi-person-circle"></i>
 					</button>
 				</div>
-				<div id="description">
+				<div id="tab-contents">
 					<!-- Side bar's description will be handled by the js -->
+					<div class="tab-content h-100"></div>
+					<div class="tab-content h-100 d-none">
+						<div
+							class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary"
+						>
+							Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
+						</div>
+					</div>
+					<div class="tab-content h-100 d-none">
+						<div
+							class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary"
+						>
+							Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
+						</div>
+					</div>
+					<div class="tab-content h-100 d-none"></div>
 				</div>
 				<button id="collapse-btn" class="btn">
 					<i class="bi bi-caret-right-fill"></i>
@@ -96,25 +112,17 @@
 							<form class="row g-3" method="post" enctype="multipart/form-data" id="reportForm">
 								<div class="mb-3 d-none">
 									<label for="name" class="form-label"
-										>ID <span style="font-weight: bold; color: red">*</span></label
+										>ID <span class="fw-bold text-danger">*</span></label
 									>
-									<input
-										type="text"
-										class="form-control"
-										aria-label="name"
-										id="id"
-										name="id"
-										readonly
-									/>
+									<input type="text" class="form-control" id="id" name="id" readonly />
 								</div>
 								<div class="mb-3 d-none">
 									<label for="name" class="form-label"
-										>Coordinate <span style="font-weight: bold; color: red">*</span></label
+										>Coordinate <span class="fw-bold text-danger">*</span></label
 									>
 									<input
 										type="text"
 										class="form-control"
-										aria-label="name"
 										id="coordinate"
 										name="coordinate"
 										required
@@ -123,9 +131,9 @@
 								</div>
 								<div class="mb-3">
 									<label for="type" class="form-label"
-										>Hình thức báo cáo <span style="font-weight: bold; color: red">*</span></label
+										>Hình thức báo cáo <span class="fw-bold text-danger">*</span></label
 									>
-									<select class="form-select" aria-label="type" id="type">
+									<select class="form-select" id="type" name="type">
 										<option value="Tố giác sai phạm" selected>Tố giác sai phạm</option>
 										<option value="Đăng ký nội dung">Đăng ký nội dung</option>
 										<option value="Đóng góp ý kiến">Đóng góp ý kiến</option>
@@ -133,29 +141,29 @@
 									</select>
 								</div>
 								<div class="mb-3">
-									<label for="name" class="form-label"
-										>Họ và tên <span style="font-weight: bold; color: red">*</span></label
-									>
-									<input type="text" class="form-control" aria-label="name" id="name" required />
+									<label for="name" class="form-label">
+										Họ và tên <span class="fw-bold text-danger">*</span>
+									</label>
+									<input type="text" class="form-control" id="name" name="name" required />
 								</div>
 								<div class="col-md-6">
-									<label for="email" class="form-label"
-										>Email <span style="font-weight: bold; color: red">*</span></label
-									>
-									<input type="email" class="form-control" id="email" required />
+									<label for="email" class="form-label">
+										Email <span class="fw-bold text-danger">*</span>
+									</label>
+									<input type="email" class="form-control" id="email" name="email" required />
 								</div>
 								<div class="col-md-6">
-									<label for="phone" class="form-label"
-										>Số điện thoại <span style="font-weight: bold; color: red">*</span></label
-									>
-									<input type="tel" class="form-control" id="phone" required />
+									<label for="phone" class="form-label">
+										Số điện thoại <span class="fw-bold text-danger">*</span>
+									</label>
+									<input type="tel" class="form-control" id="phone" name="phone" required />
 								</div>
 								<div class="mb-3">
-									<label for="content" class="form-label"
-										>Nội dung báo cáo <span style="font-weight: bold; color: red">*</span></label
-									>
+									<label for="content" class="form-label">
+										Nội dung báo cáo <span class="fw-bold text-danger">*</span>
+									</label>
 									<!-- Embed the HTMEditor -->
-									<textarea id="content"></textarea>
+									<textarea id="content" name="content"></textarea>
 									<script
 										src="https://htmeditor.com/js/htmeditor.min.js"
 										htmeditor_textarea="content"
@@ -164,9 +172,9 @@
 									></script>
 								</div>
 								<div class="mb-3">
-									<label for="formFileMultiple" class="form-label"
-										>Hình ảnh minh họa <span style="font-weight: bold; color: red">*</span></label
-									>
+									<label for="formFileMultiple" class="form-label">
+										Hình ảnh minh họa <span class="fw-bold text-danger">*</span>
+									</label>
 									<input
 										class="form-control"
 										type="file"
