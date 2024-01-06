@@ -98,11 +98,10 @@ export default class Form {
 	}
 
 	validateFile(files) {
-		for (const file of files) {
-			const size = file.size / 1024 / 1024;
-			if (size > 10) return false;
-		}
-		return true;
+		let sum = 0; 
+		files.map((file) => sum += file.size / 1024 / 1024); 
+		if (sum > 10) return false;
+		else return true; 
 	}
 
 	validateForm() {
