@@ -23,27 +23,11 @@ export default class Form {
 	async saveImgs(files) {
 		const filePromises = files.map((file) => {
 			return new Promise((res, rej) => {
-				const reader = new FileReader();
-				reader.onload = async () => {
-					try {
-						const response = await fetch("http://localhost:3456/image/create", {
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								url: reader.result,
-								caption: file.name,
-								createAt: new Date(),
-							}),
-						});
-
-						res(await response.json());
-					} catch (error) {
-						rej(error);
-					}
+				let fileReader = new FileReader();
+				fileReader.onload = function () {
+					return res(fileReader.result);
 				};
-				reader.readAsDataURL(file);
+				fileReader.readAsDataURL(file);
 			});
 		});
 		const fileIds = await Promise.all(filePromises);
@@ -65,7 +49,7 @@ export default class Form {
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
-			const response = await fetch("http://localhost:3456/report/create", {
+			const response = await fetch("http://localhost:3000/resident/report/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
