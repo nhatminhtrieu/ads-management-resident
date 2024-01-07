@@ -90,15 +90,28 @@ export default class SideBar {
 	createModalForAd(ad) {
 		const wrap = document.createElement("div");
 		wrap.setAttribute("id", "wrap", "d-none");
-		const imgContainer = document.createElement("div");
-		imgContainer.classList.add("d-flex", "flex-column");
-		imgContainer.style = `height: 300px; gap: 1rem; overflow: scroll;`;
-		imgContainer.innerHTML = "Không có ảnh";
-		if (ad.imgs.length > 0) {
+		let container = document.createElement("div");
+		container.classList.add("container");
+		let imgContainer = document.createElement("div");
+		imgContainer.classList.add("row", "gx-2");
+		imgContainer.style = `    max-height: 416px;
+		overflow-y: scroll;`;
+		imgContainer.innerHTML = `
+			<div class='col'>Không có ảnh</div>
+		`;
+		if (ad.imgs.length == 1) {
+			imgContainer.innerHTML = "";
+			const img = document.createElement("img");
+			img.classList.add("col", "rounded");
+			img.style = "height: 400px; object-fit: cover";
+			img.setAttribute("src", ad.imgs[0]);
+			imgContainer.appendChild(img);
+		} else if (ad.imgs.length > 0) {
 			imgContainer.innerHTML = "";
 			ad.imgs.forEach((url) => {
 				const img = document.createElement("img");
-				img.style = `width: 100%; `;
+				img.classList.add("col-6", "mb-2", "px-1", "rounded");
+				img.style = "height: 200px; object-fit: cover";
 				img.setAttribute("src", url);
 				imgContainer.appendChild(img);
 			});
@@ -113,6 +126,7 @@ export default class SideBar {
 		wrap.appendChild(date);
 
 		this.infoModalBody.appendChild(wrap);
+		this.infoModal.querySelector(".modal-content").style = "width: 600px";
 	}
 
 	handleViewDetail() {
