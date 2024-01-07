@@ -16,7 +16,7 @@
 
    - Run `npm start`.
 
-   - Navigate to `localhost:3456/static/html/map.html`.
+   - Navigate to `localhost:3456/static/index.html`.
 
 ## Folder Structure
 
