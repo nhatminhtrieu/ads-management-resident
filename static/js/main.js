@@ -3,14 +3,14 @@ import { Service } from "./map/MapService.js";
 import Form from "./components/Form.js";
 import SideBar from "./components/SideBar.js";
 
-function contentAd(advertisement) {
+function contentAd(location) {
 	const contentString =
 		"<div class='card' style='width: 18rem;padding:0; border:none'>" +
-		`<h5 class="card-title">${advertisement.typeAds}</h5>` +
-		`<p class="card-text">${advertisement.typeLoc}</p>` +
-		`<p class="card-text">${advertisement.address.formatted_text}</p>` +
+		`<h5 class="card-title">${location.format.name}</h5>` +
+		`<p class="card-text">${location.type}</p>` +
+		`<p class="card-text">${location.address}</p>` +
 		`<p class="card-text" style='font-weight:bold; font-style: italic'>${
-			advertisement.zoning ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"
+			location.zoning ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"
 		}</p>` +
 		"</div>";
 	return contentString;
@@ -30,14 +30,14 @@ function contentReport(report) {
 
 async function loadAdMarkers(map) {
 	try {
-		const response = await fetch("http://localhost:3456/advertisement/locations");
+		const response = await fetch("http://localhost:3000/resident/location");
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
 		const list = await response.json();
 		for await (const ad of list) {
 			const contentString = contentAd(ad);
-			map.pushAdMarker(ad, ad.address.formatted_text, contentString);
+			map.pushAdMarker(ad, ad.address, contentString);
 		}
 	} catch (error) {
 		console.error(error);
@@ -46,7 +46,7 @@ async function loadAdMarkers(map) {
 
 async function loadReportMarkers(map) {
 	try {
-		const response = await fetch("http://localhost:3456/report");
+		const response = await fetch("http://localhost:3000/resident/report");
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}

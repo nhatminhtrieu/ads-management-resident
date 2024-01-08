@@ -48,16 +48,15 @@ export default class GeoService {
 			`https://places.googleapis.com/v1/places/${placeID}?fields=displayName,formattedAddress&key=AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA`
 		);
 		const data = await response.json();
-		const coordinate = latlng.toJSON();
 		const firstComponentAddress = data.formattedAddress.split(",")[0];
 
 		if (firstComponentAddress === data.displayName.text)
 			return {
 				name: "Vị trí chưa được đặt tên",
 				address: data.formattedAddress,
-				coordinate,
+				coordinate: latlng,
 			};
 		else;
-		return { name: data.displayName.text, address: data.formattedAddress, coordinate };
+		return { name: data.displayName.text, address: data.formattedAddress, coordinate: latlng };
 	}
 }
