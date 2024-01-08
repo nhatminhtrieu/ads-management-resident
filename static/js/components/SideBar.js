@@ -42,7 +42,7 @@ export default class SideBar {
 		const idReports = JSON.parse(localStorage.getItem("idReports"));
 		for (let i = 0; i < idReports.length; i = i + 1) {
 			const response = await fetch(
-				`http://localhost:3000/resident/report/detail?id=${idReports[i]}`
+				`https://localhost:3000/resident/report/detail?id=${idReports[i]}`
 			);
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
@@ -146,7 +146,7 @@ export default class SideBar {
 	setCardsForAds(location) {
 		let cardList = new CardList();
 		this.infoModalBody.innerHTML = "";
-		fetch(`http://localhost:3000/resident/advertisement?location=${location._id}`)
+		fetch(`https://localhost:3000/resident/advertisement?location=${location._id}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
