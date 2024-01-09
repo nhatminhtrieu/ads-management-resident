@@ -1,5 +1,3 @@
-const DATABASE = "http://localhost:3456";
-
 class Card {
 	#map = {
 		ads: this.#createAds,

@@ -1,3 +1,5 @@
+import DATABASE from "../dbConfig.js";
+
 export default class Form {
 	constructor(map) {
 		this.modal = document.querySelector("#reportModal");
@@ -49,7 +51,7 @@ export default class Form {
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
-			const response = await fetch("http://localhost:3000/resident/report/create", {
+			const response = await fetch(`${DATABASE}/resident/report/create`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -98,10 +100,10 @@ export default class Form {
 	}
 
 	validateFile(files) {
-		let sum = 0; 
-		files.map((file) => sum += file.size / 1024 / 1024); 
+		let sum = 0;
+		files.map((file) => (sum += file.size / 1024 / 1024));
 		if (sum > 10) return false;
-		else return true; 
+		else return true;
 	}
 
 	validateForm() {
