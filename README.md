@@ -16,28 +16,23 @@
 
    - Run `npm start`.
 
-   - Navigate to `localhost:3456/static/html/map.html`.
+   - Navigate to `localhost:3456/static/index.html`.
 
 ## Folder Structure
 
 ```shell
 ads-management-resident
-├── database
-│     ├── models
-│     │    └── <ModelName>.js                   # Model's schema declaration
-│     ├── repositories
-│     │    └── <RepositoryName>.js              # Repository declaration
-│     └── Connection.js                         # Database connection
 ├── routes                                      # Routes declaration
 │     └── <RouteName>.js
-├── services                                    # Database services declaration
-│     └── <ServiceName>.js
+├── sslcert                                     # SSL Certificate
+│     ├── <CertificateName>.crt
+│     └── <CertificateName>.key
 └── static
       ├── assets
       ├── html
       ├── js                                    # Functions
-      │    ├── ...
-      │    └── service                          # Render services declaration
+      │    ├── components                       
+      │    └── map                                
       └── style                                 # Styling folder
 ```
 
