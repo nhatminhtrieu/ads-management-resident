@@ -71,9 +71,9 @@ async function main() {
 	const sideBar = new SideBar();
 	sideBar.init(map);
 
+	service.preloadCaptcha();
 	service.moveToCurrentLocation();
 	service.showAllMarker();
-	service.preloadCaptcha();
 
 	// Enable render ad markers function
 	await loadAdMarkers(map);
