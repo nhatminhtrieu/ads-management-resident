@@ -65,7 +65,7 @@ export default class Form {
 					phone: this.phoneInput.value,
 					content: this.contentInput.value,
 					imgs: imgsId,
-					type: "issued",
+					type: "Đã tiếp nhận",
 				}),
 			});
 

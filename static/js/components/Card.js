@@ -98,7 +98,7 @@ class Card {
 
 		const status = document.createElement("p");
 		status.classList.add("card-text", "fw-bold", "fst-italic");
-		status.innerText = info.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
+		status.innerText = info.type === "Đã tiếp nhận" ? "Đã tiếp nhận" : "Đã xử lý";
 		card.append(status);
 		return card;
 	}

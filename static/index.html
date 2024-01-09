@@ -1,280 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Advertisement management resident</title>
-		<link rel="icon" type="image/x-icon" href="./assets/favicon.svg" />
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-		/>
-		<link rel="stylesheet" href="./styles.css" />
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-			crossorigin="anonymous"
-		></script>
-		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-		<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA&libraries=places"></script>
 
-		<script type="module" src="./js/main.js"></script>
-	</head>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Advertisement management resident</title>
+	<link rel="icon" type="image/x-icon" href="./assets/favicon.svg" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+	<link rel="stylesheet" href="./styles.css" />
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA&libraries=places"></script>
 
-	<body>
-		<div class="container">
-			<div id="side-bar">
-				<div id="tabs-menu">
-					<button
-						class="btn tab-icon tab-active row align-items-center p-1"
-						style="border: none; text-transform: none; gap: 0"
-					>
-						<i class="bi bi-search"></i>
-						<div class="p-0" style="font-size: 12px;">Tìm kiếm</div>
-					</button>
-					<button
-						class="btn tab-icon row align-items-center p-1"
-						style="border: none; text-transform: none; gap: 0"
-					>
-						<i class="bi bi-pin-map-fill"></i>
-						<div class="p-0" style="font-size: 12px;">Quảng cáo</div>
-					</button>
-					<button
-						class="btn tab-icon row align-items-center p-1"
-						style="border: none; text-transform: none; gap: 0"
-					>
-						<i class="bi bi-exclamation-circle-fill"></i>
-						<div class="p-0" style="font-size: 12px;">Báo cáo</div>
-					</button>
-					<button
-						class="btn tab-icon row align-items-center p-1"
-						style="border: none; text-transform: none; gap: 0"
-					>
-						<i class="bi bi-send-exclamation-fill"></i>
-						<div class="p-0" style="font-size: 12px;">Đã gửi</div>
-					</button>
-				</div>
-				<div id="tab-contents">
-					<!-- Side bar's description will be handled by the js -->
-					<div class="tab-content h-100"></div>
-					<div class="tab-content h-100 d-none">
-						<div
-							class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary"
-						>
-							Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
-						</div>
-					</div>
-					<div class="tab-content h-100 d-none">
-						<div
-							class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary"
-						>
-							Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
-						</div>
-					</div>
-					<div class="tab-content h-100 d-none"></div>
-				</div>
-				<button id="collapse-btn" class="btn">
-					<i class="bi bi-caret-right-fill"></i>
+	<script type="module" src="./js/main.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<div id="side-bar">
+			<div id="tabs-menu">
+				<button class="btn tab-icon tab-active row align-items-center p-1"
+					style="border: none; text-transform: none; gap: 0">
+					<i class="bi bi-search"></i>
+					<div class="p-0" style="font-size: 12px;">Tìm kiếm</div>
+				</button>
+				<button class="btn tab-icon row align-items-center p-1"
+					style="border: none; text-transform: none; gap: 0">
+					<i class="bi bi-pin-map-fill"></i>
+					<div class="p-0" style="font-size: 12px;">Quảng cáo</div>
+				</button>
+				<button class="btn tab-icon row align-items-center p-1"
+					style="border: none; text-transform: none; gap: 0">
+					<i class="bi bi-exclamation-circle-fill"></i>
+					<div class="p-0" style="font-size: 12px;">Báo cáo</div>
+				</button>
+				<button class="btn tab-icon row align-items-center p-1"
+					style="border: none; text-transform: none; gap: 0">
+					<i class="bi bi-send-exclamation-fill"></i>
+					<div class="p-0" style="font-size: 12px;">Đã gửi</div>
 				</button>
 			</div>
-			<div id="map" class="w-100 vh-100 position-absolute"></div>
-			<div
-				class="modal fade"
-				id="infoModal"
-				tabindex="-1"
-				role="dialog"
-				aria-labelledby="infoModalCenter"
-				aria-hidden="true"
-			>
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="infoModalTitle">Thông tin chi tiết</h5>
-							<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body"></div>
+			<div id="tab-contents">
+				<!-- Side bar's description will be handled by the js -->
+				<div class="tab-content h-100"></div>
+				<div class="tab-content h-100 d-none">
+					<div class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary">
+						Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
 					</div>
 				</div>
+				<div class="tab-content h-100 d-none">
+					<div class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary">
+						Chưa có thông tin, vui lòng chọn 1 điểm trên bản đồ
+					</div>
+				</div>
+				<div class="tab-content h-100 d-none"></div>
 			</div>
-			<div
-				class="modal fade"
-				id="reportModal"
-				tabindex="-1"
-				role="dialog"
-				aria-labelledby="reportModalCenter"
-				aria-hidden="true"
-			>
-				<div
-					class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
-					role="document"
-				>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="reportModalTitle">Báo cáo vi phạm</h5>
-							<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<form class="row g-3" method="post" enctype="multipart/form-data" id="reportForm">
-								<div class="mb-3 d-none">
-									<label for="name" class="form-label"
-										>ID <span class="fw-bold text-danger">*</span></label
-									>
-									<input type="text" class="form-control" id="id" name="id" readonly />
+			<button id="collapse-btn" class="btn">
+				<i class="bi bi-caret-right-fill"></i>
+			</button>
+		</div>
+		<div id="map" class="w-100 vh-100 position-absolute"></div>
+		<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalCenter"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="infoModalTitle">Thông tin chi tiết</h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalCenter"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="reportModalTitle">Báo cáo vi phạm</h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form class="row g-3" method="post" enctype="multipart/form-data" id="reportForm">
+							<div class="mb-3 d-none">
+								<label for="name" class="form-label">ID <span
+										class="fw-bold text-danger">*</span></label>
+								<input type="text" class="form-control" id="id" name="id" readonly />
+							</div>
+							<div class="mb-3 d-none">
+								<label for="name" class="form-label">Coordinate <span
+										class="fw-bold text-danger">*</span></label>
+								<input type="text" class="form-control" id="coordinate" name="coordinate" required
+									readonly />
+							</div>
+							<div class="mb-3">
+								<label for="type" class="form-label">Hình thức báo cáo <span
+										class="fw-bold text-danger">*</span></label>
+								<select class="form-select" id="type" name="type">
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="name" class="form-label">
+									Họ và tên <span class="fw-bold text-danger">*</span>
+								</label>
+								<input type="text" class="form-control" id="name" name="name" required />
+							</div>
+							<div class="col-md-6">
+								<label for="email" class="form-label">
+									Email <span class="fw-bold text-danger">*</span>
+								</label>
+								<input type="email" class="form-control" id="email" name="email" required />
+							</div>
+							<div class="col-md-6">
+								<label for="phone" class="form-label">
+									Số điện thoại <span class="fw-bold text-danger">*</span>
+								</label>
+								<input type="tel" class="form-control" id="phone" name="phone" required />
+							</div>
+							<div class="mb-3">
+								<label for="content" class="form-label">
+									Nội dung báo cáo <span class="fw-bold text-danger">*</span>
+								</label>
+								<!-- Embed the HTMEditor -->
+								<textarea id="content" name="content"></textarea>
+								<script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="content"
+									editor_height="360" run_local="no"></script>
+							</div>
+							<div class="mb-3">
+								<label for="formFileMultiple" class="form-label">
+									Hình ảnh minh họa <span class="fw-bold text-danger">*</span>
+								</label>
+								<input class="form-control" type="file" id="formFileMultiple" multiple
+									aria-describedby="fileHelp" accept="image/*" required />
+								<div id="fileHelp" class="invalid-feedback">
+									Tối đa 02 hình, tổng dung lượng các hình tối đa 10MB.
 								</div>
-								<div class="mb-3 d-none">
-									<label for="name" class="form-label"
-										>Coordinate <span class="fw-bold text-danger">*</span></label
-									>
-									<input
-										type="text"
-										class="form-control"
-										id="coordinate"
-										name="coordinate"
-										required
-										readonly
-									/>
-								</div>
-								<div class="mb-3">
-									<label for="type" class="form-label"
-										>Hình thức báo cáo <span class="fw-bold text-danger">*</span></label
-									>
-									<select class="form-select" id="type" name="type">
-										<option value="Tố giác sai phạm" selected>Tố giác sai phạm</option>
-										<option value="Đăng ký nội dung">Đăng ký nội dung</option>
-										<option value="Đóng góp ý kiến">Đóng góp ý kiến</option>
-										<option value="Giải đáp thắc mắc">Giải đáp thắc mắc</option>
-									</select>
-								</div>
-								<div class="mb-3">
-									<label for="name" class="form-label">
-										Họ và tên <span class="fw-bold text-danger">*</span>
-									</label>
-									<input type="text" class="form-control" id="name" name="name" required />
-								</div>
-								<div class="col-md-6">
-									<label for="email" class="form-label">
-										Email <span class="fw-bold text-danger">*</span>
-									</label>
-									<input type="email" class="form-control" id="email" name="email" required />
-								</div>
-								<div class="col-md-6">
-									<label for="phone" class="form-label">
-										Số điện thoại <span class="fw-bold text-danger">*</span>
-									</label>
-									<input type="tel" class="form-control" id="phone" name="phone" required />
-								</div>
-								<div class="mb-3">
-									<label for="content" class="form-label">
-										Nội dung báo cáo <span class="fw-bold text-danger">*</span>
-									</label>
-									<!-- Embed the HTMEditor -->
-									<textarea id="content" name="content"></textarea>
-									<script
-										src="https://htmeditor.com/js/htmeditor.min.js"
-										htmeditor_textarea="content"
-										editor_height="360"
-										run_local="no"
-									></script>
-								</div>
-								<div class="mb-3">
-									<label for="formFileMultiple" class="form-label">
-										Hình ảnh minh họa <span class="fw-bold text-danger">*</span>
-									</label>
-									<input
-										class="form-control"
-										type="file"
-										id="formFileMultiple"
-										multiple
-										aria-describedby="fileHelp"
-										accept="image/*"
-										required
-									/>
-									<div id="fileHelp" class="invalid-feedback">
-										Tối đa 02 hình, tổng dung lượng các hình tối đa 10MB.
-									</div>
-								</div>
-								<div class="mb-3">
-									<div id="captcha"></div>
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
-								Bỏ qua
-							</button>
-							<button
-								type="submit"
-								class="btn btn-primary"
-								form="reportForm"
-								data-bs-dismiss="modal"
-								disabled
-							>
-								Lưu
-							</button>
-						</div>
+							</div>
+							<div class="mb-3">
+								<div id="captcha"></div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
+							Bỏ qua
+						</button>
+						<button type="submit" class="btn btn-primary" form="reportForm" data-bs-dismiss="modal"
+							disabled>
+							Lưu
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<script>
-			((g) => {
-			  var h,
-			    a,
-			    k,
-			    p = "The Google Maps JavaScript API",
-			    c = "google",
-			    l = "importLibrary",
-			    q = "__ib__",
-			    m = document,
-			    b = window;
-			  b = b[c] || (b[c] = {});
-			  var d = b.maps || (b.maps = {}),
-			    r = new Set(),
-			    e = new URLSearchParams(),
-			    u = () =>
-			      h ||
-			      (h = new Promise(async (f, n) => {
-			        await (a = m.createElement("script"));
-			        e.set("libraries", [...r] + "");
-			        for (k in g)
-			          e.set(
-			            k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
-			            g[k]
-			          );
-			        e.set("callback", c + ".maps." + q);
-			        a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
-			        d[q] = f;
-			        a.onerror = () => (h = n(Error(p + " could not load.")));
-			        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
-			        m.head.append(a);
-			      }));
-			  d[l]
-			    ? console.warn(p + " only loads once. Ignoring:", g)
-			    : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
-			})({ key: "AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA", v: "weekly" });
-		</script>
-		<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" crossorigin="anonymous"></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-			integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-			crossorigin="anonymous"
-		></script>
-	</body>
+	<script>
+		((g) => {
+			var h,
+				a,
+				k,
+				p = "The Google Maps JavaScript API",
+				c = "google",
+				l = "importLibrary",
+				q = "__ib__",
+				m = document,
+				b = window;
+			b = b[c] || (b[c] = {});
+			var d = b.maps || (b.maps = {}),
+				r = new Set(),
+				e = new URLSearchParams(),
+				u = () =>
+					h ||
+					(h = new Promise(async (f, n) => {
+						await (a = m.createElement("script"));
+						e.set("libraries", [...r] + "");
+						for (k in g)
+							e.set(
+								k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+								g[k]
+							);
+						e.set("callback", c + ".maps." + q);
+						a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+						d[q] = f;
+						a.onerror = () => (h = n(Error(p + " could not load.")));
+						a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+						m.head.append(a);
+					}));
+			d[l]
+				? console.warn(p + " only loads once. Ignoring:", g)
+				: (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+		})({ key: "AIzaSyCwF9RHdM2Jhzi-hDNJEGvJvEEFos4ViRA", v: "weekly" });
+	</script>
+	<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+		integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+		integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+		crossorigin="anonymous"></script>
+	<script>
+		async function addReportTypes() {
+			const response = await fetch("https://localhost:3000/resident/report-type/get-all");
+			const reportTypes = await response.json();
+			for (const reportType of reportTypes) {
+				$("#type").append(`<option value="${reportType._id}">${reportType.name}</option>`);
+			}
+		}
+		addReportTypes();
+	</script>
+</body>
+
 </html>
