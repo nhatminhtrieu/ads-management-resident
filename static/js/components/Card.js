@@ -78,7 +78,7 @@ class Card {
 
 		const list = document.createElement("div");
 		list.innerHTML = `
-		<h5 class="card-title">${info.typeReport}</h5>
+		<h5 class="card-title">${info.typeReportName}</h5>
 		<ul>
 			<li>Email: <em>${info.email}</em></li>\
 			<li>Họ và tên: <em>${info.name}</em></li>\

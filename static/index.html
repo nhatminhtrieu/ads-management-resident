@@ -211,7 +211,7 @@
 		crossorigin="anonymous"></script>
 	<script>
 		async function addReportTypes() {
-			const response = await fetch("https://localhost:3000/resident/report-type/get-all");
+			const response = await fetch(`${DATABASE}/resident/report-type/get-all`);
 			const reportTypes = await response.json();
 			for (const reportType of reportTypes) {
 				$("#type").append(`<option value="${reportType._id}">${reportType.name}</option>`);
