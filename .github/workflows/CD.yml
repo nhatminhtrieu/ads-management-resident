@@ -32,4 +32,4 @@ jobs:
           git pull
           npm i
           pm2 delete AMR
-          pm2 start app.js -- name AMR
+          pm2 start app.js --name AMR
