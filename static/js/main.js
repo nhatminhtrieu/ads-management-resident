@@ -2,6 +2,7 @@ import { IMap } from "./map/Map.js";
 import { Service } from "./map/MapService.js";
 import Form from "./components/Form.js";
 import SideBar from "./components/SideBar.js";
+import DATABASE from "./dbConfig.js";
 
 function contentAd(location) {
 	const contentString =
@@ -30,7 +31,7 @@ function contentReport(report) {
 
 async function loadAdMarkers(map) {
 	try {
-		const response = await fetch("https://localhost:3000/resident/location");
+		const response = await fetch(`${DATABASE}/resident/location`);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -46,7 +47,7 @@ async function loadAdMarkers(map) {
 
 async function loadReportMarkers(map) {
 	try {
-		const response = await fetch("https://localhost:3000/resident/report");
+		const response = await fetch(`${DATABASE}/resident/report`);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}

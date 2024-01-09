@@ -1,6 +1,8 @@
 import GeoService from "../map/GeoService.js";
 import { Card, CardList } from "./Card.js";
 import SearchBar from "./SearchBar.js";
+import DATABASE from "../dbConfig.js";
+
 export default class SideBar {
 	constructor() {
 		this.sidebar = document.getElementById("side-bar");
@@ -41,9 +43,7 @@ export default class SideBar {
 		if (!data) localStorage.setItem("idReports", "[]");
 		const idReports = JSON.parse(localStorage.getItem("idReports"));
 		for (let i = 0; i < idReports.length; i = i + 1) {
-			const response = await fetch(
-				`https://localhost:3000/resident/report/detail?id=${idReports[i]}`
-			);
+			const response = await fetch(`${DATABASE}/resident/report/detail?id=${idReports[i]}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
 			}
@@ -146,7 +146,7 @@ export default class SideBar {
 	setCardsForAds(location) {
 		let cardList = new CardList();
 		this.infoModalBody.innerHTML = "";
-		fetch(`https://localhost:3000/resident/advertisement?location=${location._id}`)
+		fetch(`${DATABASE}/resident/advertisement?location=${location._id}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
