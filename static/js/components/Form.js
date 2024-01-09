@@ -49,7 +49,7 @@ export default class Form {
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
-			const response = await fetch("http://localhost:3000/resident/report/create", {
+			const response = await fetch("https://localhost:3000/resident/report/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
