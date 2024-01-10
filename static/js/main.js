@@ -52,7 +52,6 @@ async function loadReportMarkers(map) {
 		const list = await response.json();
 		for await (const report of list) {
 			const contentString = contentReport(report);
-			console.log(report);
 			map.pushReportMarker(report, report.typeReport, contentString);
 		}
 	} catch (error) {
