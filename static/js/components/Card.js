@@ -65,7 +65,7 @@ class Card {
                     <h5 class="card-title">Thông tin bảng quảng cáo</h5>\
                     <div class="card-text">\
                     <strong> Chưa có dữ liệu! </strong>\
-                    <div>Vui lòng chọn điểm trên bản đồ để xem</div>\
+                    <div>Vui lòng chọn điểm khác trên bản đồ để xem</div>\
                 </div>\
             </div>\
         </div>`;
@@ -78,7 +78,7 @@ class Card {
 
 		const list = document.createElement("div");
 		list.innerHTML = `
-		<h5 class="card-title">${info.typeReport}</h5>
+		<h5 class="card-title">${info.typeReportName}</h5>
 		<ul>
 			<li>Email: <em>${info.email}</em></li>\
 			<li>Họ và tên: <em>${info.name}</em></li>\
@@ -98,7 +98,7 @@ class Card {
 
 		const status = document.createElement("p");
 		status.classList.add("card-text", "fw-bold", "fst-italic");
-		status.innerText = info.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
+		status.innerText = info.type === "Đã tiếp nhận" ? "Đã tiếp nhận" : "Đã xử lý";
 		card.append(status);
 		return card;
 	}

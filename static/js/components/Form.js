@@ -47,7 +47,7 @@ export default class Form {
 			const imgsId = await this.saveImgs(Array.from(files));
 			const content =
 				"<div class='card' style='width: 18rem;padding:0; border:none'>" +
-				`<h5 class="card-title">${this.typeInput.value}</h5>` +
+				`<h5 class="card-title">${this.typeInput.options[this.typeInput.selectedIndex].text}</h5>` +
 				`<p class="card-text">${this.emailInput.value}</p>` +
 				`<p class="card-text" style='font-weight:bold; font-style: italic'>CHƯA XỬ LÝ</p>` +
 				"</div>";
@@ -65,7 +65,7 @@ export default class Form {
 					phone: this.phoneInput.value,
 					content: this.contentInput.value,
 					imgs: imgsId,
-					type: "issued",
+					type: "Đã tiếp nhận",
 				}),
 			});
 

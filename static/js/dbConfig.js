@@ -1,2 +1,2 @@
-const DATABASE = "https://amo.jcxdc.one";
+const DATABASE = "https://localhost:3000";
 export default DATABASE;
