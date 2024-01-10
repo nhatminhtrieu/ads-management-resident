@@ -71,14 +71,13 @@ export default class Form {
 
 			try {
 				const outcome = await response.json();
-				console.log("Outcome: ", outcome);
 				let idReports = JSON.parse(localStorage.getItem("idReports"));
 				if (idReports == null) idReports = [];
 				idReports.push(outcome._id);
 				localStorage.setItem("idReports", JSON.stringify(idReports));
 				this.map.pushReportMarker(outcome, "", content);
 			} catch (error) {
-				console.log("Error parsing JSON response:", error);
+				console.error("Error parsing JSON response:", error);
 			}
 		});
 	}
