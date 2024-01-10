@@ -65,7 +65,7 @@ class Card {
                     <h5 class="card-title">Thông tin bảng quảng cáo</h5>\
                     <div class="card-text">\
                     <strong> Chưa có dữ liệu! </strong>\
-                    <div>Vui lòng chọn điểm trên bản đồ để xem</div>\
+                    <div>Vui lòng chọn điểm khác trên bản đồ để xem</div>\
                 </div>\
             </div>\
         </div>`;
