@@ -5,13 +5,8 @@ router.post("/", async (req, res) => {
     const token = req.body.token
     const SECRET_KEY = "0x4AAAAAAAOLF_VMQOt4VdwLdjlleq29sVY"
     let formData = new FormData();
-    let userIP = null;
-
-    await fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => userIP = data.ip)
-        .catch(error => console.error("Error on getting users' IP:", error));
-
+    const userIP = req.socket.remoteAddress;
+    
     formData.append('secret', SECRET_KEY);
     formData.append('response', token);
     formData.append('remoteip', userIP);
