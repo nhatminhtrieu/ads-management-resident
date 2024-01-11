@@ -90,7 +90,6 @@ export class IMap {
 			location.zoning ? "zoning" : "not_zoning"
 		);
 		await marker.init();
-
 		marker.addListener("click", () => {
 			// Update and open info window
 			this.infoWindow.setContent(content);
@@ -100,7 +99,7 @@ export class IMap {
 			});
 
 			// Update side bar
-			this.sideBar.setCardsForAds(location.coordinate);
+			this.sideBar.setCardsForAds(location);
 			this.sideBar.show();
 			this.selectedMarker && this.selectedMarker.setMap(null);
 		});
@@ -183,9 +182,8 @@ export class IMap {
 
 			// Update card
 			const geolocation = new GeoService();
-			this.sideBar.setCardsForUserSelection(
-				await geolocation.getDetailsFromCoordinate(event.latLng)
-			);
+			let latLng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+			this.sideBar.setCardsForUserSelection(await geolocation.getDetailsFromCoordinate(latLng));
 			this.sideBar.show();
 		});
 	}

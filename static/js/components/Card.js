@@ -1,6 +1,3 @@
-import Form from "./Form.js";
-const DATABASE = "http://localhost:3456";
-
 class Card {
 	#map = {
 		ads: this.#createAds,
@@ -11,8 +8,6 @@ class Card {
 
 	constructor(info, type = "ads") {
 		this.root = this.#map[type](info);
-		this.info = info;
-		this.handleClick = () => {};
 	}
 
 	#createAds(info) {
@@ -24,13 +19,13 @@ class Card {
 
 		const address = document.createElement("p");
 		address.classList.add("card-text");
-		address.innerText = info.address["formatted_text"];
+		address.innerText = info.location.address;
 
 		const list = document.createElement("ul");
 		list.innerHTML = `<li>Kích thước: <em>${info.size}</em></li>\
 		<li>Số lượng: <em>${info.number}</em></li>\
-		<li>Hình thức: <em>${info.typeAds}</em></li>\
-		<li>Phân loại: <em>${info.typeLoc}</em</li>\
+		<li>Hình thức: <em>${info.location.format.name}</em></li>\
+		<li>Phân loại: <em>${info.location.type}</em</li>\
 		`;
 
 		const row = document.createElement("div");
@@ -48,7 +43,7 @@ class Card {
 		button.innerHTML = `<i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm`;
 		button.onclick = () => {
 			document.getElementById("id").value = info._id ? info._id : "";
-			document.getElementById("coordinate").value = JSON.stringify(info.coordinate);
+			document.getElementById("coordinate").value = JSON.stringify(info.location.coordinate);
 		};
 		row.appendChild(button);
 
@@ -70,7 +65,7 @@ class Card {
                     <h5 class="card-title">Thông tin bảng quảng cáo</h5>\
                     <div class="card-text">\
                     <strong> Chưa có dữ liệu! </strong>\
-                    <div>Vui lòng chọn điểm trên bản đồ để xem</div>\
+                    <div>Vui lòng chọn điểm khác trên bản đồ để xem</div>\
                 </div>\
             </div>\
         </div>`;
@@ -83,7 +78,7 @@ class Card {
 
 		const list = document.createElement("div");
 		list.innerHTML = `
-		<h5 class="card-title">${info.typeReport}</h5>
+		<h5 class="card-title">${info.typeReportName}</h5>
 		<ul>
 			<li>Email: <em>${info.email}</em></li>\
 			<li>Họ và tên: <em>${info.name}</em></li>\
@@ -94,28 +89,16 @@ class Card {
 
 		card.append(list);
 
-		info.imgs.forEach((imgId) => {
+		info.imgs.forEach((image) => {
 			const img = document.createElement("img");
 			img.style = `padding-bottom: "20px"`;
-			fetch(`${DATABASE}/image?id=${imgId}`)
-				.then((response) => {
-					return response.json();
-				})
-				.then((image) => {
-					img.setAttribute("src", image.url);
-				})
-				.catch((error) => {
-					img.setAttribute(
-						"src",
-						"https://images.unsplash.com/photo-1553096442-8fe2118fb927?ixid=M3w1NDE3MjR8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2VtZW50fGVufDB8fHx8MTcwMjc0NjU0MHww&ixlib=rb-4.0.3"
-					);
-				});
+			img.setAttribute("src", image);
 			card.append(img);
 		});
 
 		const status = document.createElement("p");
 		status.classList.add("card-text", "fw-bold", "fst-italic");
-		status.innerText = info.type === "issued" ? "CHƯA XỬ LÝ" : "ĐÃ XỬ LÝ";
+		status.innerText = info.type === "Đã tiếp nhận" ? "Đã tiếp nhận" : "Đã xử lý";
 		card.append(status);
 		return card;
 	}
@@ -145,7 +128,6 @@ class Card {
 		button.setAttribute("data-bs-target", "#reportModal");
 		button.innerHTML = `<i class="bi bi-exclamation-octagon-fill"></i> Báo cáo vi phạm`;
 		button.onclick = () => {
-			console.log(info);
 			document.getElementById("id").value = info._id;
 			document.getElementById("coordinate").value = JSON.stringify(info.coordinate);
 		};
