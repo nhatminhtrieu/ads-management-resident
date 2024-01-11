@@ -69,12 +69,16 @@ export default class Form {
 				}),
 			});
 
-			const outcome = await response.json();
-			let idReports = JSON.parse(localStorage.getItem("idReports"));
-			if (idReports == null) idReports = [];
-			idReports.push(outcome._id);
-			localStorage.setItem("idReports", JSON.stringify(idReports));
-			this.map.pushReportMarker(outcome, "", content);
+			try {
+				const outcome = await response.json();
+				let idReports = JSON.parse(localStorage.getItem("idReports"));
+				if (idReports == null) idReports = [];
+				idReports.push(outcome._id);
+				localStorage.setItem("idReports", JSON.stringify(idReports));
+				this.map.pushReportMarker(outcome, "", content);
+			} catch (error) {
+				console.error("Error parsing JSON response:", error);
+			}
 		});
 	}
 
