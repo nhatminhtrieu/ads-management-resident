@@ -39,21 +39,29 @@ export default class SideBar {
 
 	async savedReports() {
 		let cardList = new CardList();
+		this.tabContents[3].innerHTML = "";
 		const data = localStorage.getItem("idReports");
 		if (!data) localStorage.setItem("idReports", "[]");
 		const idReports = JSON.parse(localStorage.getItem("idReports"));
+		let count = 0;
 		for (let i = 0; i < idReports.length; i = i + 1) {
 			const response = await fetch(`${DATABASE}/resident/report/detail?id=${idReports[i]}`);
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
 			}
 			const report = await response.json();
+			if (report) count = count + 1;
 			const card = new Card(report, "report");
 			cardList.append(card.root);
 		}
-
-		this.tabContents[3].innerHTML = "";
-		this.tabContents[3].appendChild(cardList.root);
+		console.log(count);
+		if (count) {
+			this.tabContents[3].appendChild(cardList.root);
+		} else {
+			this.tabContents[3].innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center fs-3 text-center text-secondary">
+			Bạn chưa gửi báo cáo nào
+		</div>`;
+		}
 	}
 
 	setActive(index) {
@@ -90,11 +98,9 @@ export default class SideBar {
 	createModalForAd(ad) {
 		const wrap = document.createElement("div");
 		wrap.setAttribute("id", "wrap", "d-none");
-		let container = document.createElement("div");
-		container.classList.add("container");
 		let imgContainer = document.createElement("div");
 		imgContainer.classList.add("row", "gx-2");
-		imgContainer.style = `    max-height: 416px;
+		imgContainer.style = `    max-height: ${ad.used ? "208px" : "416px"};
 		overflow-y: scroll;`;
 		imgContainer.innerHTML = `
 			<div class='col'>Không có ảnh</div>
@@ -116,13 +122,32 @@ export default class SideBar {
 				imgContainer.appendChild(img);
 			});
 		}
-
-		const exp = new Date(ad.end);
 		const date = document.createElement("div");
-		date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toLocaleDateString("en-GB", {
-			timeZone: "UTC",
-		})}`;
+		date.innerHTML = "<strong>Chưa có quảng cáo được cấp phép</strong>";
+		const adContainer = document.createElement("div");
+		if (ad.used) {
+			const adHeader = document.createElement("h5");
+			adHeader.classList.add("text-center", "mb-4");
+			adHeader.innerText = "Hình ảnh quảng cáo được cấp phép";
+			adContainer.appendChild(adHeader);
+			const adImgs = document.createElement("div");
+			adImgs.classList.add("row", "gx-2", "justify-content-center");
+			adImgs.style = `max-height: 208px; overflow-y: scroll; `;
+			ad.used.imgs.forEach((url) => {
+				const img = document.createElement("img");
+				img.classList.add("col-6", "mb-2", "px-1", "rounded");
+				img.style = "height: 200px; object-fit: cover; max-width: 100%";
+				img.setAttribute("src", url);
+				adImgs.appendChild(img);
+			});
+			adContainer.appendChild(adImgs);
+			const exp = new Date(ad.used.end);
+			date.innerHTML = `<strong>Ngày hết hạn hợp đồng:</strong> ${exp.toLocaleDateString("en-GB", {
+				timeZone: "UTC",
+			})}`;
+		}
 		wrap.appendChild(imgContainer);
+		wrap.appendChild(adContainer);
 		wrap.appendChild(date);
 
 		this.infoModalBody.appendChild(wrap);
